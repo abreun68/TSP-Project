@@ -16,7 +16,7 @@ public class Tour {
     private String type;
     private int dimension;
     private String edgeWeighType;
-    private ArrayList<List<Integer>> coordinates;
+    private ArrayList<List<Integer>> container;
     private boolean inNodesSection;
 
     public Tour() {
@@ -25,10 +25,14 @@ public class Tour {
         type = "";
         dimension = 0;
         edgeWeighType = "";
-        coordinates = new ArrayList<List<Integer>>();
+        container = new ArrayList<List<Integer>>();
         boolean inNodesSection = false;
     }
 
+    /**
+     * Parses lines that complaint with the TSPLIB file format.
+     * @param line 
+     */
     public void parseLine(String line) {
 
         if (line.contains("NAME:")) {
@@ -62,10 +66,10 @@ public class Tour {
 
         if (this.inNodesSection) {
             String[] split = line.split(" ");
-            int position = Integer.parseInt(split[0].trim());
+            int location = Integer.parseInt(split[0].trim());
             int x = Integer.parseInt(split[1].trim());
             int y = Integer.parseInt(split[2].trim());
-            setCoordinates(position, x, y);
+            addCity(location, x, y);
         }
 
         if (line.contains("NODE_COORD_SECTION")) {
@@ -94,12 +98,12 @@ public class Tour {
         this.edgeWeighType = edgeWeighType;
     }
 
-    public void setCoordinates(int pos, int x, int y) {
-        List<Integer> xy = new ArrayList<Integer>();
-        xy.add(pos);
-        xy.add(x);
-        xy.add(y);
-        coordinates.add(xy);
+    public void addCity(int location, int x, int y) {
+        List<Integer> city = new ArrayList<Integer>();
+        city.add(location);
+        city.add(x);
+        city.add(y);
+        container.add(city);
     }
 
     /**
@@ -127,25 +131,25 @@ public class Tour {
         return this.edgeWeighType;
     }
 
-    public int getXCoord(int cityNumber) {
+    public int getXCoord(int location) {
         int x_coord = -1;
-        Iterator<List<Integer>> it = coordinates.iterator();
+        Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
-            List<Integer> list = it.next();
-            if (list.get(0) == cityNumber) {
-                x_coord = list.get(1);
+            List<Integer> city = it.next();
+            if (city.get(0) == location) {
+                x_coord = city.get(1);
             }
         }
         return x_coord;
     }//end of getXCoord()
 
-    public int getYCoord(int cityNumber) {
+    public int getYCoord(int location) {
         int y_coord = -1;
-        Iterator<List<Integer>> it = coordinates.iterator();
+        Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
-            List<Integer> list = it.next();
-            if (list.get(0) == cityNumber) {
-                y_coord = list.get(2);
+            List<Integer> city = it.next();
+            if (city.get(0) == location) {
+                y_coord = city.get(2);
             }
         }
         return y_coord;
@@ -161,10 +165,15 @@ public class Tour {
         line.append("EDGE_WEIGHT_TYPE: ").append(this.edgeWeighType).append("\n");
         line.append("NODE_COORD_SECTION" + "\n");
         
-        Iterator<List<Integer>> it = coordinates.iterator();
+        Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
             List<Integer> list = it.next();
-            line.append(list.get(0)).append(" ").append(list.get(1)).append(" ").append(list.get(2)).append("\n");
+            
+            int loc = list.get(0);
+            int x   = list.get(1);
+            int y   = list.get(2);
+            
+            line.append(loc).append(" ").append(x).append(" ").append(y).append("\n");
         }
         line.append("EOF");
         return line.toString();
