@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,7 +15,9 @@ import java.util.Scanner;
  */
 public class TSP {
 // C:\Users\nabreu\Desktop\Algorithms\inputs\inputs\brute10.tsp
-
+    private static final int LOCATION = 0;
+    private static final int X_COORD  = 1;
+    private static final int Y_COORD  = 2;
     /**
      * @param args the command line arguments
      */
@@ -47,7 +51,13 @@ public class TSP {
         }
 
         System.out.println(tour.toString());
-        System.out.println(tour.getCity(12).get(1));
+        
+        try {
+            tour.getCity(12).get(LOCATION);
+            
+        } catch (NullPointerException ex) {
+            Logger.getLogger(TSP.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//end of main()
 }

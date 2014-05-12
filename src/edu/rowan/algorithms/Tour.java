@@ -101,26 +101,27 @@ public class Tour {
         this.edgeWeighType = edgeWeighType;
     }
 
-    public void addCity(int location, int x, int y) {
+    public void addCity(int location, int x_coord, int y_coord) {
         List<Integer> city = new ArrayList<Integer>();
         city.add(location);
-        city.add(x);
-        city.add(y);
+        city.add(x_coord);
+        city.add(y_coord);
         container.add(city);
     }
 
-    public List<Integer> getCity(int location) {
+    public List<Integer> getCity(int location) throws NullPointerException {
         List<Integer> city = null;
-        boolean found = false;
+        
         Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
             city = it.next();
             if (city.get(LOCATION) == location) {
-                found = true;
                 break;
             }
         }//end of while
-        
+        if(city == null){
+            throw new NullPointerException("No location: " + location + " available.");
+        }
         return city;
     }
     
