@@ -18,7 +18,10 @@ public class Tour {
     private String edgeWeighType;
     private ArrayList<List<Integer>> container;
     private boolean inNodesSection;
-
+    private static final int LOCATION = 0;
+    private static final int X_COORD  = 1;
+    private static final int Y_COORD  = 2;
+    
     public Tour() {
         name = "";
         comment = "";
@@ -106,6 +109,22 @@ public class Tour {
         container.add(city);
     }
 
+    public List<Integer> getCity(int location) {
+        List<Integer> city = null;
+        boolean found = false;
+        Iterator<List<Integer>> it = container.iterator();
+        while (it.hasNext()) {
+            city = it.next();
+            if (city.get(LOCATION) == location) {
+                found = true;
+                break;
+            }
+        }//end of while
+        
+        return city;
+    }
+    
+    
     /**
      * This function returns the name of the .tsp file
      *
@@ -136,8 +155,9 @@ public class Tour {
         Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
             List<Integer> city = it.next();
-            if (city.get(0) == location) {
-                x_coord = city.get(1);
+            if (city.get(LOCATION) == location) {
+                x_coord = city.get(X_COORD);
+                break;
             }
         }
         return x_coord;
@@ -148,8 +168,9 @@ public class Tour {
         Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
             List<Integer> city = it.next();
-            if (city.get(0) == location) {
-                y_coord = city.get(2);
+            if (city.get(LOCATION) == location) {
+                y_coord = city.get(Y_COORD);
+                break;
             }
         }
         return y_coord;
@@ -162,18 +183,16 @@ public class Tour {
         line.append("COMMENT: ").append(this.comment).append("\n");
         line.append("TYPE: TSP ").append(this.type).append("\n");
         line.append("DIMENSION: ").append(this.dimension).append("\n");
-        line.append("EDGE_WEIGHT_TYPE: ").append(this.edgeWeighType).append("\n");
+        line.append("EDGE_WEIGHT_TYPE: ").append(this.edgeWeighType);
+        line.append("\n");
         line.append("NODE_COORD_SECTION" + "\n");
         
         Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
-            List<Integer> list = it.next();
-            
-            int loc = list.get(0);
-            int x   = list.get(1);
-            int y   = list.get(2);
-            
-            line.append(loc).append(" ").append(x).append(" ").append(y).append("\n");
+            List<Integer> city = it.next();            
+            line.append(city.get(LOCATION)).append(" ");
+            line.append(city.get(X_COORD)).append(" ");
+            line.append(city.get(Y_COORD)).append("\n");
         }
         line.append("EOF");
         return line.toString();

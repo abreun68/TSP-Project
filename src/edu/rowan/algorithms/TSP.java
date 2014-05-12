@@ -47,7 +47,7 @@ public class TSP {
         }
 
         System.out.println(tour.toString());
-        System.out.println(tour.getXCoord(12));
+        System.out.println(tour.getCity(12).get(1));
 
     }//end of main()
 }
