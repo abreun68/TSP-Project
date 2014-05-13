@@ -109,6 +109,27 @@ public class Tour {
         container.add(city);
     }
 
+    /**
+     * This function returns an array list of all city locations.
+     * @return 
+     */
+    public ArrayList<Integer> getCities() {
+        ArrayList<Integer> cities = new ArrayList<Integer>();
+        Iterator<List<Integer>> it = container.iterator();
+        while (it.hasNext()) {
+            List<Integer> city = it.next();
+            cities.add(city.get(LOCATION));
+        }
+        return cities;
+    }
+    
+    /**
+     * This function returns a list containing the city location, x and y 
+     * coordinates.  
+     * @param location The specific city location to get.
+     * @return
+     * @throws NullPointerException 
+     */
     public List<Integer> getCity(int location) throws NullPointerException {
         List<Integer> city = null;
         
@@ -143,6 +164,10 @@ public class Tour {
         return this.type;
     }
 
+    /**
+     * This function returns the dimensioned specified by the .tsp file
+     * @return 
+     */
     public int getDimension() {
         return this.dimension;
     }
