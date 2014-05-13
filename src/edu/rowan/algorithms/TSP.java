@@ -15,6 +15,8 @@ import java.util.logging.Logger;
  */
 public class TSP {
 // C:\Users\nabreu\Desktop\Algorithms\inputs\inputs\brute10.tsp
+// /Users/nasser/Desktop/TSP_Files/brute10.tsp
+    
     private static final int LOCATION = 0;
     private static final int X_COORD  = 1;
     private static final int Y_COORD  = 2;
@@ -52,12 +54,10 @@ public class TSP {
 
         System.out.println(tour.toString());
         
-        try {
-            tour.getCity(12).get(LOCATION);
-            
-        } catch (NullPointerException ex) {
-            Logger.getLogger(TSP.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Permutation m = new Permutation(null);
+        System.out.println(m.getFactorial(10));
+        
+
 
     }//end of main()
 }
