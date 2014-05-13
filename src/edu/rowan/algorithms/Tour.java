@@ -68,7 +68,7 @@ public class Tour {
         }
 
         if (this.inNodesSection) {
-            String[] split = line.split(" ");
+            String[] split = line.split("\\s+");
             int location = Integer.parseInt(split[0].trim());
             int x = Integer.parseInt(split[1].trim());
             int y = Integer.parseInt(split[2].trim());

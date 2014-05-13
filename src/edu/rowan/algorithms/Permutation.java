@@ -17,14 +17,42 @@ public class Permutation {
         permutations = new ArrayList<List<Integer>>();
         permutations.add(cities);
         this.cities = cities;
+
+
+            generate();
+        
     }
 
     public void generate() {
+        int lastItemIndex = cities.size() - 1;
         
-        for (int i = 0; i < cities.size(); i++){
+        for (int j = 0; j < cities.size(); j++) {
             
+            for (int trail = lastItemIndex; trail >= 0; trail--) {
+                System.out.println(cities.toString());
+                int head = (trail - 1);
+                if (head >= 0) {
+                    if (cities.get(trail) > cities.get(head)) {
+                        swap(trail, (head));
+                        //sort(head);
+                        
+                        
+                    }
+                }
+            }
         }
     }//end of generate()
+    
+    public void sort(int m) {
+        //last item index
+        int index = (cities.size() - 1);
+
+        for (int i = m; i <= index; i++) {
+            if (cities.get(i) < cities.get(i+1)) {
+                swap(i, (i + 1));
+            }
+        }
+    }//end of sort()
     
     public double getFactorial(int n) {
         double fact = 1;
@@ -33,6 +61,8 @@ public class Permutation {
         }
         return fact;
     }
+    
+
     
     public void swap(int j, int k){
         Integer tmp = cities.get(j);
