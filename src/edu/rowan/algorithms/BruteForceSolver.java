@@ -7,20 +7,20 @@ import java.util.List;
  *
  * @author Nacer Abreu and Emmanuel Bonilla
  */
-public class Permutation {
+public class BruteForceSolver {
 
     private ArrayList<Integer> cities;
     private ArrayList<List<Integer>> permutations;
     private Tour tour;
 
-    Permutation(Tour tour) {
+    BruteForceSolver(Tour tour) {
         this.tour = tour;
         permutations = new ArrayList<List<Integer>>();
         this.cities = tour.getCities();
         permutations.add(cities);
     }
 
-    public void generate() {
+    public void generatePermutations() {
         int lastItemIndex = cities.size() - 1;
         System.out.println(cities.toString() + " Dist.:" +  getTotalDistance(cities));        
         for (int j = 0; j < cities.size(); j++) {
@@ -48,7 +48,7 @@ public class Permutation {
                 }
             }
         }
-    }//end of generate()
+    }//end of generatePermutations()
     
     private void sort(int m) {
         //last item index

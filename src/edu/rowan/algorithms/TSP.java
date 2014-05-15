@@ -53,8 +53,8 @@ public class TSP {
 
         System.out.println(tour.toString());
         // ArrayList<Integer> cities = tour.getCities();
-        Permutation m = new Permutation(tour);
-        m.generate();
+        BruteForceSolver m = new BruteForceSolver(tour);
+        m.generatePermutations();
         
 
 
