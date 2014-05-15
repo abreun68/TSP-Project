@@ -31,7 +31,7 @@ public class BruteForceSolver {
 
     public void generatePermutations() {
         int lastItemIndex = cities.size() - 1;
-        System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+        //System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
         shortestDistance = getTotalDistance(cities);
         shortestTour.clear();
         shortestTour.addAll(cities);
@@ -56,7 +56,7 @@ public class BruteForceSolver {
                         //System.out.println("lastItemIndex = " + lastItemIndex);
                         trail = lastItemIndex + 1;
                         double totalDistance = getTotalDistance(cities);
-                        System.out.println(cities.toString() + " Dist.:" + totalDistance);
+                        //System.out.println(cities.toString() + " Dist.:" + totalDistance);
                         if (shortestDistance > totalDistance) {
                             shortestDistance = totalDistance;
                             shortestTour.clear();
@@ -129,7 +129,7 @@ public class BruteForceSolver {
             double[] p = {x1, y1};
             double[] q = {x2, y2};
             
-            System.out.println(m + " (" + x1 + "," + y1 + "); " + n + " (" + x2 + "," + y2 + "); " + getDistance(p, q));
+            //System.out.println(m + " (" + x1 + "," + y1 + "); " + n + " (" + x2 + "," + y2 + "); " + getDistance(p, q));
             total += getDistance(p, q);
             // System.out.println("Sum :" + total);
         }// end for loop
