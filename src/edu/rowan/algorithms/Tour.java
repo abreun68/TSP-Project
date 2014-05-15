@@ -202,6 +202,22 @@ public class Tour {
         return y_coord;
     }//end of getYCoord()
 
+    public String printTour(ArrayList<Integer> tour){
+        StringBuilder line = new StringBuilder();
+        line.append("NAME: ").append(this.name).append("\n");
+        line.append("TYPE: ").append(this.type).append("\n");
+        line.append("DIMENSION: ").append(this.dimension).append("\n");
+        line.append("TOUR_SECTION" + "\n");
+        
+        Iterator<Integer> it = tour.iterator();
+        while (it.hasNext()) {
+            Integer location = it.next();            
+            line.append(location).append("\n");
+        }
+        line.append("-1");
+        return line.toString();        
+    }//end of printTour()
+    
     @Override
     public String toString() {
         StringBuilder line = new StringBuilder();

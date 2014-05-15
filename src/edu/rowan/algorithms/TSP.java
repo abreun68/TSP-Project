@@ -55,6 +55,8 @@ public class TSP {
         // ArrayList<Integer> cities = tour.getCities();
         BruteForceSolver bruteForce = new BruteForceSolver(tour);
         bruteForce.generatePermutations();
+        tour.printTour(bruteForce.getShortestTour());
+        
         System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance());
 
 

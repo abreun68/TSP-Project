@@ -29,7 +29,7 @@ public class BruteForceSolver {
 
     public void generatePermutations() {
         int lastItemIndex = cities.size() - 1;
-        System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+        //System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
         shortestDistance = getTotalDistance(cities);
         shortestTour.clear();
         shortestTour.addAll(cities);
@@ -53,7 +53,7 @@ public class BruteForceSolver {
                         sort(head);
                         //System.out.println("lastItemIndex = " + lastItemIndex);
                         trail = lastItemIndex + 1;
-                        System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+                        // System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
                         if (shortestDistance > getTotalDistance(cities)) {
                             shortestDistance = getTotalDistance(cities);
                             shortestTour.clear();
