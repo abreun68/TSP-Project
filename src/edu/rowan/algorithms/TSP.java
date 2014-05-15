@@ -2,13 +2,10 @@
 package edu.rowan.algorithms;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +14,7 @@ import java.util.logging.Logger;
 public class TSP {
 // C:\Users\nabreu\Desktop\Algorithms\inputs\inputs\brute10.tsp
 // /Users/nasser/Desktop/TSP_Files/brute10.tsp
+// /home/nasser/NetBeansProjects/TSP-Project/src/edu/rowan/algorithms/inputs/brute10.tsp
     
     private static final int LOCATION = 0;
     private static final int X_COORD  = 1;
@@ -54,9 +52,9 @@ public class TSP {
         }
 
         System.out.println(tour.toString());
-        ArrayList<Integer> cities = tour.getCities();
-        Permutation m = new Permutation(cities);
-        System.out.println(m.getFactorial(10));
+        // ArrayList<Integer> cities = tour.getCities();
+        Permutation m = new Permutation(tour);
+        m.generate();
         
 
 
