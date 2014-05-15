@@ -8,17 +8,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- *
+ * Entry point for the application. It creates a instance of a Tour object
+ * and fills it with the information from the .tsp file.
+ * 
  * @author Nacer Abreu
  */
 public class TSP {
-// C:\Users\nabreu\Desktop\Algorithms\inputs\inputs\brute10.tsp
-// /Users/nasser/Desktop/TSP_Files/brute10.tsp
-// /home/nasser/NetBeansProjects/TSP-Project/src/edu/rowan/algorithms/inputs/brute10.tsp
     
-    private static final int LOCATION = 0;
-    private static final int X_COORD  = 1;
-    private static final int Y_COORD  = 2;
     /**
      * @param args the command line arguments
      */
@@ -51,13 +47,15 @@ public class TSP {
             System.err.println("Error: " + e);
         }
 
-        System.out.println(tour.toString());
-        // ArrayList<Integer> cities = tour.getCities();
+        // System.out.println(tour.toString());
+
         BruteForceSolver bruteForce = new BruteForceSolver(tour);
         bruteForce.generatePermutations();
-        tour.printTour(bruteForce.getShortestTour());
+        ArrayList<Integer> shortestTour = bruteForce.getShortestTour();
+        String answer = tour.printTour(shortestTour);
+        System.out.println(answer);
         
-        System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance());
+        //System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance());
 
 
     }}

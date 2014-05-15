@@ -1,4 +1,3 @@
-
 package edu.rowan.algorithms;
 
 import java.util.ArrayList;
@@ -6,8 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
- * @author nabreu
+ * This class holds all the information related to a tour that was provided by
+ * the .tsp file.
+ * @author Nacer Abreu & Emmanuel Bonilla
  */
 public class Tour {
 
@@ -19,9 +19,9 @@ public class Tour {
     private ArrayList<List<Integer>> container;
     private boolean inNodesSection;
     private static final int LOCATION = 0;
-    private static final int X_COORD  = 1;
-    private static final int Y_COORD  = 2;
-    
+    private static final int X_COORD = 1;
+    private static final int Y_COORD = 2;
+
     public Tour() {
         name = "";
         comment = "";
@@ -34,7 +34,8 @@ public class Tour {
 
     /**
      * Parses lines that complaint with the TSPLIB file format.
-     * @param line 
+     *
+     * @param line
      */
     public void parseLine(String line) {
 
@@ -111,7 +112,8 @@ public class Tour {
 
     /**
      * This function returns an array list of all city locations.
-     * @return 
+     *
+     * @return
      */
     public ArrayList<Integer> getCities() {
         ArrayList<Integer> cities = new ArrayList<Integer>();
@@ -122,17 +124,18 @@ public class Tour {
         }
         return cities;
     }
-    
+
     /**
-     * This function returns a list containing the city location, x and y 
-     * coordinates.  
+     * This function returns a list containing the city location, x and y
+     * coordinates.
+     *
      * @param location The specific city location to get.
      * @return
-     * @throws NullPointerException 
+     * @throws NullPointerException
      */
     public List<Integer> getCity(int location) throws NullPointerException {
         List<Integer> city = null;
-        
+
         Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
             city = it.next();
@@ -140,13 +143,12 @@ public class Tour {
                 break;
             }
         }//end of while
-        if(city == null){
+        if (city == null) {
             throw new NullPointerException("No location: " + location + " available.");
         }
         return city;
     }
-    
-    
+
     /**
      * This function returns the name of the .tsp file
      *
@@ -166,7 +168,8 @@ public class Tour {
 
     /**
      * This function returns the dimensioned specified by the .tsp file
-     * @return 
+     *
+     * @return
      */
     public int getDimension() {
         return this.dimension;
@@ -202,25 +205,28 @@ public class Tour {
         return y_coord;
     }//end of getYCoord()
 
-    public String printTour(ArrayList<Integer> tour){
+    public String printTour(ArrayList<Integer> tour) {
         StringBuilder line = new StringBuilder();
+        line.append("\n");
         line.append("NAME: ").append(this.name).append("\n");
         line.append("TYPE: ").append(this.type).append("\n");
         line.append("DIMENSION: ").append(this.dimension).append("\n");
         line.append("TOUR_SECTION" + "\n");
-        
+
         Iterator<Integer> it = tour.iterator();
         while (it.hasNext()) {
-            Integer location = it.next();            
+            Integer location = it.next();
             line.append(location).append("\n");
         }
         line.append("-1");
-        return line.toString();        
-    }//end of printTour()
-    
+        line.append("\n\n");
+        return line.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder line = new StringBuilder();
+        line.append("\n");
         line.append("NAME: ").append(this.name).append("\n");
         line.append("COMMENT: ").append(this.comment).append("\n");
         line.append("TYPE: TSP ").append(this.type).append("\n");
@@ -228,10 +234,10 @@ public class Tour {
         line.append("EDGE_WEIGHT_TYPE: ").append(this.edgeWeighType);
         line.append("\n");
         line.append("NODE_COORD_SECTION" + "\n");
-        
+
         Iterator<List<Integer>> it = container.iterator();
         while (it.hasNext()) {
-            List<Integer> city = it.next();            
+            List<Integer> city = it.next();
             line.append(city.get(LOCATION)).append(" ");
             line.append(city.get(X_COORD)).append(" ");
             line.append(city.get(Y_COORD)).append("\n");

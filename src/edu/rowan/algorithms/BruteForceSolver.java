@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * This class takes a Tour object and tries by brute force to find out the 
+ * shortest tour distance.
+ * 
  * @author Nacer Abreu and Emmanuel Bonilla
  */
 public class BruteForceSolver {
