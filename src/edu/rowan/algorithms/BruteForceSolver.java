@@ -12,17 +12,27 @@ public class BruteForceSolver {
     private ArrayList<Integer> cities;
     private ArrayList<List<Integer>> permutations;
     private Tour tour;
-
+    
+    private ArrayList<Integer> shortestTour;
+    private double shortestDistance;
+    
     BruteForceSolver(Tour tour) {
         this.tour = tour;
         permutations = new ArrayList<List<Integer>>();
         this.cities = tour.getCities();
         permutations.add(cities);
+        shortestTour = new ArrayList<Integer>();
+        shortestDistance = 0.0;
+        
+        
     }
 
     public void generatePermutations() {
         int lastItemIndex = cities.size() - 1;
         System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+        shortestDistance = getTotalDistance(cities);
+        shortestTour.clear();
+        shortestTour.addAll(cities);
         for (int j = 0; j < cities.size(); j++) {
 
             for (int trail = lastItemIndex; trail >= 0; trail--) {
@@ -44,12 +54,26 @@ public class BruteForceSolver {
                         //System.out.println("lastItemIndex = " + lastItemIndex);
                         trail = lastItemIndex + 1;
                         System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+                        if (shortestDistance > getTotalDistance(cities)) {
+                            shortestDistance = getTotalDistance(cities);
+                            shortestTour.clear();
+                            shortestTour.addAll(cities);
+                        }
+                        
                     }
                 }
             }
         }
     }//end of generatePermutations()
 
+    public double getShortestDistance(){
+        return shortestDistance;
+    }
+    
+    public ArrayList<Integer> getShortestTour(){
+        return shortestTour;
+    }
+    
     private void sort(int m) {
         //last item index
         int index = (cities.size() - 1);

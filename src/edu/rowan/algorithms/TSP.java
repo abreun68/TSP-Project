@@ -53,10 +53,9 @@ public class TSP {
 
         System.out.println(tour.toString());
         // ArrayList<Integer> cities = tour.getCities();
-        BruteForceSolver m = new BruteForceSolver(tour);
-        m.generatePermutations();
-        
+        BruteForceSolver bruteForce = new BruteForceSolver(tour);
+        bruteForce.generatePermutations();
+        System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance());
 
 
-    }//end of main()
-}
+    }}
