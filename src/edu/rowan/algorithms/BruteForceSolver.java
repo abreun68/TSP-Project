@@ -96,10 +96,18 @@ public class BruteForceSolver {
             int[] p = {x1, y1};
             int[] q = {x2, y2};
 
-            total += Euclidean.distance(p, q);
+            total += getDistance(p, q);
         }// end for loop
 
         return total;
     }// end of getTotalDistance()
+    
+    
+    private double getDistance(int[] p, int[] q) {
+        double a = 0.0;
+        // dist((x, y), (a, b)) = √(x - a)² + (y - b)²
+        a = Math.sqrt((Math.pow((p[0] - q[0]), 2)) + (Math.pow((p[1] - q[1]), 2)));
+        return a;
+    }// end of getDistance()
 
 }//end of class
