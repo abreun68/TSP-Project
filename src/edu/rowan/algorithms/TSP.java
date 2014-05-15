@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Entry point for the application. It creates a instance of a Tour object
  * and fills it with the information from the .tsp file.
  * 
- * @author Nacer Abreu
+ * @author Nacer Abreu & Emmanuel Bonilla
  */
 public class TSP {
     
