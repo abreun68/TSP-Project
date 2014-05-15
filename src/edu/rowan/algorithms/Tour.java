@@ -16,7 +16,7 @@ public class Tour {
     private String type;
     private int dimension;
     private String edgeWeighType;
-    private ArrayList<List<Float>> container;
+    private ArrayList<List<Double>> container;
     private boolean inNodesSection;
     private static final int LOCATION = 0;
     private static final int X_COORD = 1;
@@ -28,7 +28,7 @@ public class Tour {
         type = "";
         dimension = 0;
         edgeWeighType = "";
-        container = new ArrayList<List<Float>>();
+        container = new ArrayList<List<Double>>();
         boolean inNodesSection = false;
     }
 
@@ -71,8 +71,8 @@ public class Tour {
         if (this.inNodesSection) {
             String[] split = line.split("\\s+");
             int location = Integer.parseInt(split[0].trim());
-            float x = Float.parseFloat(split[1].trim());
-            float y = Float.parseFloat(split[2].trim());
+            double x = Double.parseDouble(split[1].trim());
+            double y = Double.parseDouble(split[2].trim());
             addCity(location, x, y);
         }
 
@@ -102,9 +102,9 @@ public class Tour {
         this.edgeWeighType = edgeWeighType;
     }
 
-    public void addCity(int location, float x_coord, float y_coord) {
-        List<Float> city = new ArrayList<Float>();
-        city.add((float) location);
+    public void addCity(int location, double x_coord, double y_coord) {
+        List<Double> city = new ArrayList<Double>();
+        city.add((double) location);
         city.add(x_coord);
         city.add(y_coord);
         container.add(city);
@@ -117,10 +117,10 @@ public class Tour {
      */
     public ArrayList<Integer> getCities() {
         ArrayList<Integer> cities = new ArrayList<Integer>();
-        Iterator<List<Float>> it = container.iterator();
+        Iterator<List<Double>> it = container.iterator();
         while (it.hasNext()) {
-            List<Float> city = it.next();
-            cities.add(Math.round(city.get(LOCATION)));
+            List<Double> city = it.next();
+            cities.add(city.get(LOCATION).intValue());
         }
         return cities;
     }
@@ -133,10 +133,10 @@ public class Tour {
      * @return
      * @throws NullPointerException
      */
-    public List<Float> getCity(int location) throws NullPointerException {
-        List<Float> city = null;
+    public List<Double> getCity(int location) throws NullPointerException {
+        List<Double> city = null;
 
-        Iterator<List<Float>> it = container.iterator();
+        Iterator<List<Double>> it = container.iterator();
         while (it.hasNext()) {
             city = it.next();
             if (Math.round(city.get(LOCATION)) == location) {
@@ -179,11 +179,11 @@ public class Tour {
         return this.edgeWeighType;
     }
 
-    public float getXCoord(int location) {
-        float x_coord = -1f;
-        Iterator<List<Float>> it = container.iterator();
+    public double getXCoord(int location) {
+        double x_coord = -1f;
+        Iterator<List<Double>> it = container.iterator();
         while (it.hasNext()) {
-            List<Float> city = it.next();
+            List<Double> city = it.next();
             if (Math.round(city.get(LOCATION)) == location) {
                 x_coord = city.get(X_COORD);
                 break;
@@ -192,11 +192,11 @@ public class Tour {
         return x_coord;
     }//end of getXCoord()
 
-    public float getYCoord(int location) {
-        float y_coord = -1;
-        Iterator<List<Float>> it = container.iterator();
+    public double getYCoord(int location) {
+        double y_coord = -1;
+        Iterator<List<Double>> it = container.iterator();
         while (it.hasNext()) {
-            List<Float> city = it.next();
+            List<Double> city = it.next();
             if (Math.round(city.get(LOCATION)) == location) {
                 y_coord = city.get(Y_COORD);
                 break;
@@ -235,9 +235,9 @@ public class Tour {
         line.append("\n");
         line.append("NODE_COORD_SECTION" + "\n");
 
-        Iterator<List<Float>> it = container.iterator();
+        Iterator<List<Double>> it = container.iterator();
         while (it.hasNext()) {
-            List<Float> city = it.next();
+            List<Double> city = it.next();
             line.append(city.get(LOCATION)).append(" ");
             line.append(city.get(X_COORD)).append(" ");
             line.append(city.get(Y_COORD)).append("\n");

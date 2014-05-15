@@ -55,7 +55,7 @@ public class BruteForceSolver {
                         sort(head);
                         //System.out.println("lastItemIndex = " + lastItemIndex);
                         trail = lastItemIndex + 1;
-                        // System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+                         //System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
                         if (shortestDistance > getTotalDistance(cities)) {
                             shortestDistance = getTotalDistance(cities);
                             shortestTour.clear();
@@ -106,7 +106,7 @@ public class BruteForceSolver {
 
     private double getTotalDistance(ArrayList<Integer> cities) {
         double total = 0.0;
-        float x1, y1, x2, y2;
+        double x1, y1, x2, y2;
 
         for (int i = 0; i < cities.size(); i++) {
             x1 = tour.getXCoord(cities.get(i));
@@ -119,17 +119,18 @@ public class BruteForceSolver {
                 x2 = tour.getXCoord(cities.get(0));
                 y2 = tour.getXCoord(cities.get(0));
             }
-            float[] p = {x1, y1};
-            float[] q = {x2, y2};
-
+            double[] p = {x1, y1};
+            double[] q = {x2, y2};
+            
             total += getDistance(p, q);
+            // System.out.println("Sum :" + total);
         }// end for loop
 
         return total;
     }// end of getTotalDistance()
     
     
-    private double getDistance(float[] p, float[] q) {
+    private double getDistance(double[] p, double[] q) {
         double a = 0.0;
         // dist((x, y), (a, b)) = √(x - a)² + (y - b)²
         a = Math.sqrt((Math.pow((p[0] - q[0]), 2)) + (Math.pow((p[1] - q[1]), 2)));
