@@ -1,4 +1,3 @@
-
 package edu.rowan.algorithms;
 
 import java.io.BufferedReader;
@@ -8,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Entry point for the application. It creates a instance of a Tour object
- * and fills it with the information from the .tsp file.
- * 
+ * Entry point for the application. It creates a instance of a Tour object and
+ * fills it with the information from the .tsp file.
+ *
  * @author Nacer Abreu & Emmanuel Bonilla
  */
 public class TSP {
-    
+
     /**
      * @param args the command line arguments
      */
@@ -48,15 +47,12 @@ public class TSP {
         }
 
         // System.out.println(tour.toString());
-
         BruteForceSolver bruteForce = new BruteForceSolver(tour);
         bruteForce.generatePermutations();
         ArrayList<Integer> shortestTour = bruteForce.getShortestTour();
         String answer = tour.printTour(shortestTour);
         System.out.println(answer);
-        
         System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance() + "\n");
 
-        
-
-    }}
+    }
+}
