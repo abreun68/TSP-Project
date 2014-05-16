@@ -55,7 +55,8 @@ public class TSP {
         String answer = tour.printTour(shortestTour);
         System.out.println(answer);
         
-        System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance());
+        System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance() + "\n");
 
+        
 
     }}

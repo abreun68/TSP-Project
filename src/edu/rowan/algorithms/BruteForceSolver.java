@@ -17,6 +17,7 @@ public class BruteForceSolver {
     
     private ArrayList<Integer> shortestTour;
     private double shortestDistance;
+    private StringBuilder sb;
     
     BruteForceSolver(Tour tour) {
         this.tour = tour;
@@ -31,10 +32,15 @@ public class BruteForceSolver {
 
     public void generatePermutations() {
         int lastItemIndex = cities.size() - 1;
-        //System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+        // System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+        
+        /**
+         * Initialize shortestDistance. This CAN NOT be initialize to zero.
+         */
         shortestDistance = getTotalDistance(cities);
         shortestTour.clear();
-        shortestTour.addAll(cities);
+
+        
         for (int j = 0; j < cities.size(); j++) {
 
             for (int trail = lastItemIndex; trail >= 0; trail--) {
@@ -55,12 +61,23 @@ public class BruteForceSolver {
                         sort(head);
                         //System.out.println("lastItemIndex = " + lastItemIndex);
                         trail = lastItemIndex + 1;
+                        
+                        /**
+                         * Calculate the total distance for the specified
+                         * permutation of cities. 
+                         */
                         double totalDistance = getTotalDistance(cities);
                         //System.out.println(cities.toString() + " Dist.:" + totalDistance);
+                        
+                        /**
+                         * Save off the shortest distance.
+                         */
                         if (shortestDistance > totalDistance) {
                             shortestDistance = totalDistance;
                             shortestTour.clear();
                             shortestTour.addAll(cities);
+                            sb.append("Total Dist.: " + totalDistance + "\n");
+                            System.out.println(sb.toString());
                         }
                         
                     }
@@ -108,8 +125,9 @@ public class BruteForceSolver {
     private double getTotalDistance(ArrayList<Integer> cities) {
         double total = 0.0;
         double x1, y1, x2, y2;
-        int m;
-        int n; 
+        int m;  // For debugging purposes. It holds the city location.
+        int n;  // For debugging purposes. It holds the city location.
+        sb = new StringBuilder();
         
         for (int i = 0; i < cities.size(); i++) {
             x1 = tour.getXCoord(cities.get(i));
@@ -129,9 +147,12 @@ public class BruteForceSolver {
             double[] p = {x1, y1};
             double[] q = {x2, y2};
             
-            //System.out.println(m + " (" + x1 + "," + y1 + "); " + n + " (" + x2 + "," + y2 + "); " + getDistance(p, q));
+            
+            String s = String.format("%d (%.2f, %.2f); %d (%.2f, %.2f); %f \n",
+                    m, x1, y1, n, x2, y2, getDistance(p, q));
+            sb.append(s);
             total += getDistance(p, q);
-            // System.out.println("Sum :" + total);
+             
         }// end for loop
 
         return total;
@@ -143,8 +164,12 @@ public class BruteForceSolver {
         // dist((x, y), (a, b)) = √(x - a)² + (y - b)²
         double x = Math.pow((p[0] - q[0]), 2);
         double y = Math.pow((p[1] - q[1]), 2);        
-        a = Math.sqrt( x + y);
+        a = Math.sqrt( x + y );
         return a;
     }// end of getDistance()
 
+    
+
+    
+    
 }//end of class
