@@ -32,7 +32,7 @@ public class BruteForceSolver {
 
     public void generatePermutations() {
         int lastItemIndex = cities.size() - 1;
-        // System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
+         System.out.println(cities.toString() + " Dist.:" + getTotalDistance(cities));
         
         /**
          * Initialize shortestDistance. This CAN NOT be initialize to zero.
@@ -67,7 +67,7 @@ public class BruteForceSolver {
                          * permutation of cities. 
                          */
                         double totalDistance = getTotalDistance(cities);
-                        //System.out.println(cities.toString() + " Dist.:" + totalDistance);
+                        System.out.println(cities.toString() + " Dist.:" + totalDistance);
                         
                         /**
                          * Save off the shortest distance.
@@ -76,7 +76,7 @@ public class BruteForceSolver {
                             shortestDistance = totalDistance;
                             shortestTour.clear();
                             shortestTour.addAll(cities);
-                            sb.append("Total Dist.: " + totalDistance + "\n");
+                            sb.append("Total Dist.: ").append(totalDistance).append("\n");
                             System.out.println(sb.toString());
                         }
                         
