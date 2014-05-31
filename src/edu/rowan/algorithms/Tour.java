@@ -21,6 +21,7 @@ public class Tour {
     private static final int LOCATION = 0;
     private static final int X_COORD = 1;
     private static final int Y_COORD = 2;
+    private double [ ] [ ] matrix;
 
     public Tour() {
         name = "";
@@ -39,33 +40,39 @@ public class Tour {
      */
     public void parseLine(String line) {
 
-        if (line.contains("NAME:")) {
+        if (line.contains("NAME")) {
             String[] split = line.split(":");
             this.name = split[1].trim();
         }
 
-        if (line.contains("COMMENT:")) {
+        if (line.contains("COMMENT")) {
             String[] split = line.split(":");
             this.comment = split[1].trim();
         }
 
-        if (line.contains("TYPE:")) {
+        if (line.contains("TYPE")) {
             String[] split = line.split(":");
             this.type = split[1].trim();
         }
 
-        if (line.contains("DIMENSION:")) {
+        if (line.contains("DIMENSION")) {
             String[] split = line.split(":");
             this.dimension = Integer.parseInt(split[1].trim());
+            
+            // Create adjancency matrix. This matrix will be use to store 
+            // the distances between cities.
+            matrix = new double [ this.dimension ] [ this.dimension ] ;   
         }
 
-        if (line.contains("EDGE_WEIGHT_TYPE:")) {
+        if (line.contains("EDGE_WEIGHT_TYPE")) {
             String[] split = line.split(":");
             this.edgeWeighType = split[1].trim();
         }
 
         if (line.contains("EOF")) {
             this.inNodesSection = false;
+            populateMatrix();
+            System.out.println("Done!");
         }
 
         if (this.inNodesSection) {
@@ -139,6 +146,8 @@ public class Tour {
         Iterator<List<Double>> it = container.iterator();
         while (it.hasNext()) {
             city = it.next();
+            // The location is ALWAYS an integer. However, the 'city' container
+            // stores doubles. 
             if (Math.round(city.get(LOCATION)) == location) {
                 break;
             }
@@ -245,4 +254,43 @@ public class Tour {
         line.append("EOF");
         return line.toString();
     }//end of toString();
+    
+    
+    private void populateMatrix() {
+        
+        for (int i = 0; i < this.dimension; i++){
+            for (int j = 0; j < this.dimension; j++){
+             
+                if ( i == j ){
+                    // Same city skip
+                    matrix[i][j] = -1;
+                } else{
+                    matrix[i][j] = calculateDistances(i, j);
+                }
+            }            
+        }
+        
+        
+    }//end of populateMatrix()
+    
+    
+    private double calculateDistances(int location1, int location2) {
+
+        double x1 = container.get(location1).get(X_COORD);
+        double y1 = container.get(location1).get(Y_COORD);
+
+        double x2 = container.get(location2).get(X_COORD);
+        double y2 = container.get(location2).get(Y_COORD);       
+        
+              
+        // dist((x, y), (a, b)) = √(x - a)² + (y - b)²
+        double distance  = 0.0;
+        double x = Math.pow((x1 - x2), 2);
+        double y = Math.pow((y1 - y2), 2);
+        distance = Math.sqrt( x + y );
+        
+        return distance;       
+    }
+    
+    
 }

@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.prefs.Preferences;
 
 /**
  * Entry point for the application. It creates a instance of a Tour object and
@@ -20,17 +21,32 @@ public class TSP {
     public static void main(String[] args) {
 
         String filename;
+        Preferences prefsRoot = Preferences.userRoot();
+        Preferences myPrefs = prefsRoot
+                .node("edu.rowan.alogorithms.preference.staticPreferenceLoader");
 
         if (0 < args.length) {
             // Accepts the .tsp filename from the command prompt 
             filename = args[0];
 
         } else {
+            
             // Prompt the user for the .tsp filename.
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter the file name: ");
+            Scanner scanner = new Scanner(System.in);            
+            System.out.println("Default File: [" + myPrefs.get("lastFile", "") + "]");
+            System.out.println("Enter the file name: ");
             System.out.flush();
             filename = scanner.nextLine();
+            
+            // The following logic is purely for convenience. It allows me to 
+            // enter the filename only once while testing.  
+            if (filename.length() == 0){
+                filename = myPrefs.get("lastFile", "");
+                System.out.println(filename);
+            }else{
+                myPrefs.put("lastFile",filename);
+            }
+                        
         }
 
         Tour tour = new Tour();
