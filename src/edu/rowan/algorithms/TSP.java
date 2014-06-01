@@ -34,7 +34,7 @@ public class TSP {
             // Prompt the user for the .tsp filename.
             Scanner scanner = new Scanner(System.in);            
             System.out.println("Default File: [" + myPrefs.get("lastFile", "") + "]");
-            System.out.println("Enter the file name: ");
+            System.out.print("Enter the file name: ");
             System.out.flush();
             filename = scanner.nextLine();
             
