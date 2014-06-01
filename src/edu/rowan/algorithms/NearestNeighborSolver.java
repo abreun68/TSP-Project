@@ -3,17 +3,16 @@
 package edu.rowan.algorithms;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
- * @author nasser
+ * @author Nacer Abreu and Emmanuel Bonilla
  */
 public class NearestNeighborSolver {
 
-    private Tour tour;
+    private final Tour tour;
     double[][] adjacencyMatrix;
-    int dimension;
+
     ArrayList<Integer> visitedCities = new ArrayList<Integer>();
     ArrayList<Integer> solution = new ArrayList<Integer>();
     double tourCost;
@@ -22,7 +21,6 @@ public class NearestNeighborSolver {
     
         this.tour = tour;
         this.adjacencyMatrix = tour.getAdjacencyMatrix();
-        this.dimension = tour.getDimension();
         tourCost = 0.0;
     }
 
@@ -34,11 +32,9 @@ public class NearestNeighborSolver {
         System.out.println("TOUR_SECTION");
 
         int node = 0; //Start Node
-        solution.add(node);
-        visitedCities.add(node);
-        System.out.println(node + 1);
+        processInitialNode(node);
         
-        while (visitedCities.size() < this.dimension ) {
+        while ( visitedCities.size() < tour.getDimension() ) {
             
             node = getNearestNode(node);
 
@@ -46,15 +42,21 @@ public class NearestNeighborSolver {
 
         System.out.println("-1");
         return solution;
-    }   
+    }//end of getShortestTour()   
     
+    
+    
+    private void processInitialNode(int node) {
+        solution.add(node); // Add the starting node to the solution array.
+        visitedCities.add(node); // Add the starting node to the visited cities
+        System.out.println(node + 1);
+    }
 
     private int getNearestNode(int node) {
         double edge = 0.0;
         int nearestNode = -1;
 
-                
-        for (int i = 0; i < this.dimension; i++) {
+        for (int i = 0; i < tour.getDimension(); i++) {
 
             
             if (visited(i)){
@@ -87,17 +89,25 @@ public class NearestNeighborSolver {
         System.out.println(nearestNode + 1);
         solution.add(nearestNode);
         return nearestNode;
-    }    
-
+    }//end of getNearestNode()  
+    
+    
+    
+    /**
+     * Test if the node argument was already visited.
+     * @param node Node to be checked against the visited cities array.
+     * @return True, if the node was already visited; otherwise, false.
+     */
     private boolean visited(int node) {
         boolean found = false;
 
         for (int i = 0; i < visitedCities.size(); i++) {
-            if(node == visitedCities.get(i)){
-               found = true; 
-               break;
+            if (node == visitedCities.get(i)) {
+                found = true;
+                break;
             }
         }
         return found;
-    }
+    }//end of visited();
+    
 }//end of class
