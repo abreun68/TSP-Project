@@ -77,7 +77,7 @@ public class NearestNeighborSolver {
             
             if ((adjacencyMatrix[node][i] <= edge)) { 
                 edge = adjacencyMatrix[node][i];
-                System.out.println("Edge :" + edge);
+//                System.out.println("Edge :" + edge);
                 nearestNode = i; //save off nearest neighbour.
             }
         }//end of for...loop
