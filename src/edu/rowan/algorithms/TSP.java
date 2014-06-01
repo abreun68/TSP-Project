@@ -42,7 +42,6 @@ public class TSP {
             // enter the filename only once while testing.  
             if (filename.length() == 0){
                 filename = myPrefs.get("lastFile", "");
-                System.out.println(filename);
             }else{
                 myPrefs.put("lastFile",filename);
             }
@@ -50,6 +49,8 @@ public class TSP {
         }
 
         Tour tour = new Tour();
+        tour.setFilename(filename);
+        
         try {
             String readLine = "";
             BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -62,13 +63,19 @@ public class TSP {
             System.err.println("Error: " + e);
         }
 
-        // System.out.println(tour.toString());
-        BruteForceSolver bruteForce = new BruteForceSolver(tour);
-        bruteForce.generatePermutations();
-        ArrayList<Integer> shortestTour = bruteForce.getShortestTour();
-        String answer = tour.printTour(shortestTour);
-        System.out.println(answer);
-        System.out.println("Solution :" + bruteForce.getShortestTour() + ", Dist.: " + bruteForce.getShortestDistance() + "\n");
+        
+//        // System.out.println(tour.toString());
+//        BruteForceSolver bruteForce = new BruteForceSolver(tour);
+//        bruteForce.generatePermutations();
+//        ArrayList<Integer> shortestTour = bruteForce.getShortestTour();
+//        String answer = tour.printTour(shortestTour);
+//        System.out.println(answer);
+//        System.out.println("Solution :" + bruteForce.getShortestTour() + 
+//                ", Dist.: " + bruteForce.getShortestDistance() + "\n");
+//        
+        
+        NearestNeighborSolver nn = new NearestNeighborSolver(tour);  
+        ArrayList<Integer> shortestTour = nn.getShortestTour();        
 
     }
 }

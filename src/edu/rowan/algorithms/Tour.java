@@ -16,7 +16,11 @@ public class Tour {
     private String type;
     private int dimension;
     private String edgeWeighType;
-    private ArrayList<List<Double>> container;
+    private String filename;
+    
+    //container of cities + (x,y) coordinates
+    private ArrayList<List<Double>> container; 
+    
     private boolean inNodesSection;
     private static final int LOCATION = 0;
     private static final int X_COORD = 1;
@@ -40,6 +44,8 @@ public class Tour {
      */
     public void parseLine(String line) {
 
+        line = line.trim();
+        
         if (line.contains("NAME")) {
             String[] split = line.split(":");
             this.name = split[1].trim();
@@ -72,10 +78,10 @@ public class Tour {
         if (line.contains("EOF")) {
             this.inNodesSection = false;
             populateMatrix();
-            System.out.println("Done!");
         }
 
         if (this.inNodesSection) {
+            
             String[] split = line.split("\\s+");
             int location = Integer.parseInt(split[0].trim());
             double x = Double.parseDouble(split[1].trim());
@@ -290,7 +296,20 @@ public class Tour {
         distance = Math.sqrt( x + y );
         
         return distance;       
+    }//end of calculateDistances()
+    
+    
+    
+    public double[][] getAdjacencyMatrix(){
+        return matrix;
     }
     
+    public void setFilename(String filename){
+        this.filename = filename;
+    }
+    
+    public String getFilename(){
+        return filename;
+    }
     
 }
