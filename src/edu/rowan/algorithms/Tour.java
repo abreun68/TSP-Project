@@ -19,7 +19,7 @@ public class Tour {
     private String filename;
     
     //container of cities + (x,y) coordinates
-    private ArrayList<List<Double>> container; 
+    private ArrayList<List<Double>> allCitiesContainer; 
     
     private boolean inNodesSection;
     private static final int LOCATION = 0;
@@ -33,14 +33,13 @@ public class Tour {
         type = "";
         dimension = 0;
         edgeWeighType = "";
-        container = new ArrayList<List<Double>>();
-        boolean inNodesSection = false;
+        allCitiesContainer = new ArrayList<List<Double>>();
+        inNodesSection = false;
     }
 
     /**
-     * Parses lines that complaint with the TSPLIB file format.
-     *
-     * @param line
+     * Parses lines that are compatible with the TSPLIB file format.
+     * @param line A line from the .tsp file
      */
     public void parseLine(String line) {
 
@@ -86,79 +85,116 @@ public class Tour {
             int location = Integer.parseInt(split[0].trim());
             double x = Double.parseDouble(split[1].trim());
             double y = Double.parseDouble(split[2].trim());
-            addCity(location, x, y);
+            saveEntry(location, x, y);
         }
 
         if (line.contains("NODE_COORD_SECTION")) {
             this.inNodesSection = true;
         }
-
     }//end of parseLine
 
+    
+    /**
+     * This function saves off the 'NAME' entry of the .tsp file.
+     * @param name The NAME entry in the .tsp file.
+     */
     public void setName(String name) {
         this.name = name;
-    }
+    }//end of setName()
 
+    
+    /**
+     * This function saves off the 'COMMENT' entry of the .tsp file. 
+     * @param comment The 'COMMENT' entry of the .tsp file. 
+     */
     public void setComment(String comment) {
         this.comment = comment;
-    }
+    }//end of setComment()
 
+    
+    /**
+     * This function saves off the 'TYPE' entry of the .tsp file.
+     * @param type The 'TYPE' entry of the .tsp file.
+     */
     public void setType(String type) {
         this.type = type;
-    }
+    }//end of setType()
 
+    
+    /**
+     * This function saves off the 'DIMENSION' entry of the .tsp file.
+     * @param dimension The 'DIMENSION' entry of the .tsp file.
+     */
     public void setDimension(int dimension) {
         this.dimension = dimension;
-    }
+    }//end of setDimension()
 
+    
+    
+    /**
+     * This function saves off the 'EDGE_WEIGHT_TYPE' entry of the .tsp file. 
+     * @param edgeWeighType The 'EDGE_WEIGHT_TYPE' entry of the .tsp file.
+     */
     public void setEdgeWeighType(String edgeWeighType) {
         this.edgeWeighType = edgeWeighType;
-    }
+    }//end of setEdgeWeighType()
 
-    public void addCity(int location, double x_coord, double y_coord) {
+    
+    
+    /**
+     * This function saves off every entry of the .tsp file.
+     * @param location The node/city location
+     * @param x_coord coordinate for the specified node. 
+     * @param y_coord coordinate for the specified node. 
+     */
+    private void saveEntry(int location, double x_coord, double y_coord) {
         List<Double> city = new ArrayList<Double>();
         city.add((double) location);
         city.add(x_coord);
         city.add(y_coord);
-        container.add(city);
-    }
+        allCitiesContainer.add(city);
+    }//end of saveEntry()
 
+    
+    
     /**
      * This function returns an array list of all city locations.
-     *
-     * @return
+     * @return An array containing all node/cities locations
      */
     public ArrayList<Integer> getCities() {
         ArrayList<Integer> cities = new ArrayList<Integer>();
-        Iterator<List<Double>> it = container.iterator();
+        Iterator<List<Double>> it = allCitiesContainer.iterator();
         while (it.hasNext()) {
             List<Double> city = it.next();
             cities.add(city.get(LOCATION).intValue());
         }
         return cities;
-    }
+    }//end of getCities()
 
+    
     /**
      * This function returns a list containing the city location, x and y
      * coordinates.
-     * @param location The specific city location to get.
-     * @return
+     * @param location The node/city location to get.
+     * @return A list containing the city x/y coordinates
      * @throws NullPointerException
      */
     public List<Double> getCity(int location) throws NullPointerException {
         List<Double> city = null;
 
-        Iterator<List<Double>> it = container.iterator();
+        Iterator<List<Double>> it = allCitiesContainer.iterator();
         while (it.hasNext()) {
             city = it.next();
-            // The location is ALWAYS an integer. However, the 'city' container
-            // stores doubles. 
+            // The location is ALWAYS an integer. However, in the 
+            // allCitiesContainer list, this value is saved off on a field of
+            // type double.
             if (Math.round(city.get(LOCATION)) == location) {
                 break;
             }
         }//end of while
         if (city == null) {
-            throw new NullPointerException("No location: " + location + " available.");
+            throw new NullPointerException("No location: " + location + 
+                    " available.");
         }
         return city;
     }
@@ -186,13 +222,16 @@ public class Tour {
      */
     public int getDimension() {
         return this.dimension;
-    }
+    }//end of getDimension()
 
     
-    
+    /**
+     * This function returns the edge-weigh-type saved off from the .tsp file
+     * @return The edge-weigh-type saved off from the .tsp file
+     */
     public String getEdgeWeighType() {
         return this.edgeWeighType;
-    }
+    }//end of getEdgeWeighType()
     
     
     /**
@@ -202,7 +241,7 @@ public class Tour {
      */
     public double getXCoord(int location) {
         double x_coord = -1f;
-        Iterator<List<Double>> it = container.iterator();
+        Iterator<List<Double>> it = allCitiesContainer.iterator();
         while (it.hasNext()) {
             List<Double> city = it.next();
             if (Math.round(city.get(LOCATION)) == location) {
@@ -213,6 +252,7 @@ public class Tour {
         return x_coord;
     }//end of getXCoord()
 
+    
     /**
      * This function returns the y-coordinate for the specified node.
      * @param location This is equal to the node or city
@@ -220,7 +260,7 @@ public class Tour {
      */
     public double getYCoord(int location) {
         double y_coord = -1;
-        Iterator<List<Double>> it = container.iterator();
+        Iterator<List<Double>> it = allCitiesContainer.iterator();
         while (it.hasNext()) {
             List<Double> city = it.next();
             if (Math.round(city.get(LOCATION)) == location) {
@@ -231,6 +271,13 @@ public class Tour {
         return y_coord;
     }//end of getYCoord()
 
+    
+    /**
+     * This function formats the solution to the tour. It takes an array 
+     * representing the solution and returns this formated string.  
+     * @param tour An array containing a tour solution.
+     * @return formatted solution
+     */
     public String printTour(ArrayList<Integer> tour) {
         StringBuilder line = new StringBuilder();
         line.append("\n");
@@ -261,7 +308,7 @@ public class Tour {
         line.append("\n");
         line.append("NODE_COORD_SECTION" + "\n");
 
-        Iterator<List<Double>> it = container.iterator();
+        Iterator<List<Double>> it = allCitiesContainer.iterator();
         while (it.hasNext()) {
             List<Double> city = it.next();
             line.append(city.get(LOCATION)).append(" ");
@@ -296,24 +343,22 @@ public class Tour {
      * This function calculates the distance between two nodes/locations.
      * @param location1 The starting node/location
      * @param location2 The destination node/location
-     * @return 
+     * @return The distance between the specified nodes.
      */
     private double calculateDistances(int location1, int location2) {
 
-        double x1 = container.get(location1).get(X_COORD);
-        double y1 = container.get(location1).get(Y_COORD);
+        double x1 = allCitiesContainer.get(location1).get(X_COORD);
+        double y1 = allCitiesContainer.get(location1).get(Y_COORD);
 
-        double x2 = container.get(location2).get(X_COORD);
-        double y2 = container.get(location2).get(Y_COORD);       
+        double x2 = allCitiesContainer.get(location2).get(X_COORD);
+        double y2 = allCitiesContainer.get(location2).get(Y_COORD);       
         
               
         // dist((x, y), (a, b)) = √(x - a)² + (y - b)²
-        double distance  = 0.0;
         double x = Math.pow((x1 - x2), 2);
-        double y = Math.pow((y1 - y2), 2);
-        distance = Math.sqrt( x + y );
+        double y = Math.pow((y1 - y2), 2);        
         
-        return distance;       
+        return Math.sqrt( x + y );    
     }//end of calculateDistances()
     
     
@@ -321,7 +366,7 @@ public class Tour {
     /**
      * This functions returns the Adjacency Matrix. This matrix consist of all
      * the calculated distances from one node to another.
-     * @return 
+     * @return A two dimensional array containing all distances between nodes.
      */
     public double[][] getAdjacencyMatrix(){
         return matrix;
@@ -334,7 +379,8 @@ public class Tour {
      */
     public void setFilename(String filename){
         this.filename = filename;
-    }
+    }//end of setFilename()
+    
     
     /**
      * This functions returns the name of the .tsp used as input.
@@ -342,6 +388,6 @@ public class Tour {
      */
     public String getFilename(){
         return filename;
-    }
+    }//end of getFilename()
     
 }
