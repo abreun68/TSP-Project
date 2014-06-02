@@ -24,8 +24,15 @@ public class NearestNeighborSolver {
         tourCost = 0.0;
     }
 
+    /**
+     * This function recursively visit every node specified in the .tsp file
+     * by always choosing the nearest node.
+     * @return  An array representing the shortest tour, the solution.
+     */
     ArrayList<Integer> getShortestTour() {
 
+        // The following "println"  represent the output headers.
+        // TODO: move these print statements to a more logical place.
         System.out.println("NAME : " + tour.getFilename());
         System.out.println("TYPE : " + tour.getType());
         System.out.println("DIMENSION : " + tour.getDimension());
@@ -33,11 +40,9 @@ public class NearestNeighborSolver {
 
         int node = 0; //Start Node
         processInitialNode(node);
-        
-        while ( visitedCities.size() < tour.getDimension() ) {
-            
-            node = getNearestNode(node);
 
+        while (visitedCities.size() < tour.getDimension()) {
+            node = getNearestNode(node);
         }
 
         System.out.println("-1");
@@ -45,7 +50,10 @@ public class NearestNeighborSolver {
     }//end of getShortestTour()   
     
     
-    
+    /**
+     * This function process the very first node that will be process.
+     * @param node Initial node
+     */
     private void processInitialNode(int node) {
         solution.add(node); // Add the starting node to the solution array.
         visitedCities.add(node); // Add the starting node to the visited cities
