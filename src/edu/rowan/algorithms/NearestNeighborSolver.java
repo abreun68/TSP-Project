@@ -27,16 +27,9 @@ public class NearestNeighborSolver {
     /**
      * This function recursively visit every node specified in the .tsp file
      * by always choosing the nearest node.
-     * @return  An array representing the shortest tour, the solution.
+     * @return  An array representing the shortest tour. The solution.
      */
     ArrayList<Integer> getShortestTour() {
-
-        // The following "println"  represent the output headers.
-        // TODO: move these print statements to a more logical place.
-        System.out.println("NAME : " + tour.getFilename());
-        System.out.println("TYPE : " + tour.getType());
-        System.out.println("DIMENSION : " + tour.getDimension());
-        System.out.println("TOUR_SECTION");
 
         int node = 0; //Start Node
         processInitialNode(node);
@@ -44,8 +37,6 @@ public class NearestNeighborSolver {
         while (visitedCities.size() < tour.getDimension()) {
             node = getNearestNode(node);
         }
-
-        System.out.println("-1");
         return solution;
     }//end of getShortestTour()   
     
@@ -55,9 +46,8 @@ public class NearestNeighborSolver {
      * @param node Initial node
      */
     private void processInitialNode(int node) {
-        solution.add(node); // Add the starting node to the solution array.
-        visitedCities.add(node); // Add the starting node to the visited cities
-        System.out.println(node + 1);
+        solution.add(node + 1); // Add the starting node to the solution array.
+        visitedCities.add(node); // Add the starting node to the isMarkedVisited cities
     }
 
     private int getNearestNode(int node) {
@@ -67,13 +57,13 @@ public class NearestNeighborSolver {
         for (int i = 0; i < tour.getDimension(); i++) {
 
             
-            if (visited(i)){
+            if (isMarkedVisited(i)){
                 // This city has already been visited by some node.
                 continue;
             }
             
             if (-1 == adjacencyMatrix[node][i]){
-                // Same city.
+                // Same city. Current and destination cities are the same.
                 continue;
             }
 
@@ -87,26 +77,24 @@ public class NearestNeighborSolver {
             
             if ((adjacencyMatrix[node][i] <= edge)) { 
                 edge = adjacencyMatrix[node][i];
-//                System.out.println("Edge :" + edge);
                 nearestNode = i; //save off nearest neighbour.
             }
         }//end of for...loop
         
         tourCost += adjacencyMatrix[node][nearestNode];
         visitedCities.add(nearestNode);
-        System.out.println(nearestNode + 1);
-        solution.add(nearestNode);
+        solution.add(nearestNode + 1);
         return nearestNode;
     }//end of getNearestNode()  
     
     
     
     /**
-     * Test if the node argument was already visited.
-     * @param node Node to be checked against the visited cities array.
-     * @return True, if the node was already visited; otherwise, false.
+     * Test if the node argument was already isMarkedVisited.
+     * @param node Node to be checked against the isMarkedVisited cities array.
+     * @return True, if the node was already isMarkedVisited; otherwise, false.
      */
-    private boolean visited(int node) {
+    private boolean isMarkedVisited(int node) {
         boolean found = false;
 
         for (int i = 0; i < visitedCities.size(); i++) {
@@ -116,6 +104,6 @@ public class NearestNeighborSolver {
             }
         }
         return found;
-    }//end of visited();
+    }//end of isMarkedVisited();
     
 }//end of class

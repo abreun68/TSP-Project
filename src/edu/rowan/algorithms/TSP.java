@@ -20,14 +20,40 @@ public class TSP {
      */
     public static void main(String[] args) {
 
-        String filename;
+        /**
+         *  Variable declaration
+         */
+        String filename = "";
         Preferences prefsRoot = Preferences.userRoot();
         Preferences myPrefs = prefsRoot
-                .node("edu.rowan.alogorithms.preference.staticPreferenceLoader");
+               .node("edu.rowan.alogorithms.preference.staticPreferenceLoader");
 
+        final int DEFAULT = 0;
+        final int BRUTEFORCE = 1;
+        final int NEAREST = 2;
+        int strategy = DEFAULT;
+        
+        ArrayList<Integer> shortestTour;
+        
+        
+        /** 
+         * Parse arguments and switches
+         */
         if (0 < args.length) {
             // Accepts the .tsp filename from the command prompt 
-            filename = args[0];
+            // filename = args[0];
+            
+            for (int i = 0; i <= args.length; i++){
+                if ((args[i].equalsIgnoreCase("--BruteForce"))){
+                    strategy = BRUTEFORCE;
+                }
+                else if((args[i].equalsIgnoreCase("--Nearest"))){
+                    strategy = NEAREST;
+                }
+                else{
+                    filename = args[0];
+                }
+            }//end of for...loop
 
         } else {
             
@@ -44,8 +70,7 @@ public class TSP {
                 filename = myPrefs.get("lastFile", "");
             }else{
                 myPrefs.put("lastFile",filename);
-            }
-                        
+            }               
         }
 
         Tour tour = new Tour();
@@ -64,18 +89,26 @@ public class TSP {
         }
 
         
-//        // System.out.println(tour.toString());
-//        BruteForceSolver bruteForce = new BruteForceSolver(tour);
-//        bruteForce.generatePermutations();
-//        ArrayList<Integer> shortestTour = bruteForce.getShortestTour();
-//        String answer = tour.printTour(shortestTour);
-//        System.out.println(answer);
-//        System.out.println("Solution :" + bruteForce.getShortestTour() + 
-//                ", Dist.: " + bruteForce.getShortestDistance() + "\n");
-//        
-        
-        NearestNeighborSolver nn = new NearestNeighborSolver(tour);  
-        ArrayList<Integer> shortestTour = nn.getShortestTour();        
-
-    }
-}
+        switch (strategy) {
+            case BRUTEFORCE:
+                // System.out.println(tour.toString());
+                BruteForceSolver bruteForce = new BruteForceSolver(tour);
+                bruteForce.generatePermutations();
+                shortestTour = bruteForce.getShortestTour();
+                
+                String answer = tour.printTour(shortestTour);
+                System.out.println(answer);
+                System.out.println("Solution :" + bruteForce.getShortestTour()
+                      + ", Dist.: " + bruteForce.getShortestDistance() + "\n");
+                break;
+            
+            case DEFAULT:   
+            case NEAREST:
+                NearestNeighborSolver nn = new NearestNeighborSolver(tour);
+                shortestTour = nn.getShortestTour();
+                String answer2 = tour.printTour(shortestTour);
+                System.out.println(answer2);
+                break;
+        }//end of switch statement
+    }//end of main()
+}// end of class TSP
