@@ -54,7 +54,8 @@ public class NearestNeighborSolver {
         double edge = 0.0;
         int nearestNode = -1;
 
-        for (int i = 0; i < tour.getDimension(); i++) {
+//        for (int i = 0; i < tour.getDimension(); i++) {
+        for (int i = (tour.getDimension() - 1); i > -1; i--) {
 
             
             if (isMarkedVisited(i)){
