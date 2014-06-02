@@ -90,9 +90,9 @@ public class NearestNeighborSolver {
     
     
     /**
-     * Test if the node argument was already isMarkedVisited.
-     * @param node Node to be checked against the isMarkedVisited cities array.
-     * @return True, if the node was already isMarkedVisited; otherwise, false.
+     * Test if the node argument was already visited.
+     * @param node Node to be checked against the visited cities array.
+     * @return True, if the node was already visited; otherwise, false.
      */
     private boolean isMarkedVisited(int node) {
         boolean found = false;
