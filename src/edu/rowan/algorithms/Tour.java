@@ -141,7 +141,6 @@ public class Tour {
     /**
      * This function returns a list containing the city location, x and y
      * coordinates.
-     *
      * @param location The specific city location to get.
      * @return
      * @throws NullPointerException
@@ -166,7 +165,6 @@ public class Tour {
 
     /**
      * This function returns the name of the .tsp file
-     *
      * @return String The name of the .tsp file.
      */
     public String getName() {
@@ -182,18 +180,26 @@ public class Tour {
     }
 
     /**
-     * This function returns the dimensioned specified by the .tsp file
-     *
-     * @return
+     * This function returns the dimensioned specified by the .tsp file. 
+     * This is equal to the number of nodes/cities in the .tsp.
+     * @return number of locations/nodes
      */
     public int getDimension() {
         return this.dimension;
     }
 
+    
+    
     public String getEdgeWeighType() {
         return this.edgeWeighType;
     }
-
+    
+    
+    /**
+     * This function returns the x-coordinate for the specified node.
+     * @param location This is equal to the node or city
+     * @return x-coordinate for the specified node.
+     */
     public double getXCoord(int location) {
         double x_coord = -1f;
         Iterator<List<Double>> it = container.iterator();
@@ -207,6 +213,11 @@ public class Tour {
         return x_coord;
     }//end of getXCoord()
 
+    /**
+     * This function returns the y-coordinate for the specified node.
+     * @param location This is equal to the node or city
+     * @return y-coordinate for the specified node.
+     */
     public double getYCoord(int location) {
         double y_coord = -1;
         Iterator<List<Double>> it = container.iterator();
@@ -262,24 +273,31 @@ public class Tour {
     }//end of toString();
     
     
+    /**
+     * This function calculates all the distances between the different 
+     * nodes/locations and stores them in the adjacency matrix for later use.
+     */
     private void populateMatrix() {
-        
-        for (int i = 0; i < this.dimension; i++){
-            for (int j = 0; j < this.dimension; j++){
-             
-                if ( i == j ){
+        for (int i = 0; i < this.dimension; i++) {
+            for (int j = 0; j < this.dimension; j++) {
+
+                if (i == j) {
                     // Same city skip
                     matrix[i][j] = -1;
-                } else{
+                } else {
                     matrix[i][j] = calculateDistances(i, j);
                 }
-            }            
+            }
         }
-        
-        
     }//end of populateMatrix()
     
     
+    /**
+     * This function calculates the distance between two nodes/locations.
+     * @param location1 The starting node/location
+     * @param location2 The destination node/location
+     * @return 
+     */
     private double calculateDistances(int location1, int location2) {
 
         double x1 = container.get(location1).get(X_COORD);
@@ -300,14 +318,28 @@ public class Tour {
     
     
     
+    /**
+     * This functions returns the Adjacency Matrix. This matrix consist of all
+     * the calculated distances from one node to another.
+     * @return 
+     */
     public double[][] getAdjacencyMatrix(){
         return matrix;
-    }
+    }//end of getAdjacencyMatrix()
     
+    
+    /**
+     * This functions sets (save off) the .tsp filename used as input  
+     * @param filename 
+     */
     public void setFilename(String filename){
         this.filename = filename;
     }
     
+    /**
+     * This functions returns the name of the .tsp used as input.
+     * @return input filename 
+     */
     public String getFilename(){
         return filename;
     }
