@@ -32,11 +32,19 @@ public class NearestNeighborSolver {
     ArrayList<Integer> getShortestTour() {
 
         int node = 0; //Start Node
+        
         processInitialNode(node);
 
         while (visitedCities.size() < tour.getDimension()) {
+            System.out.println("Node: " + (node + 1));
             node = getNearestNode(node);
+            visitedCities.add(node);
+            solution.add(node + 1);
+            System.out.println("\n");
         }
+        
+        processFinalNode(node);
+        
         return solution;
     }//end of getShortestTour()   
     
@@ -48,6 +56,13 @@ public class NearestNeighborSolver {
     private void processInitialNode(int node) {
         solution.add(node + 1); // Add the starting node to the solution array.
         visitedCities.add(node); // Add the starting node to the isMarkedVisited cities
+    }
+    
+    private void processFinalNode(int node) {
+        System.out.println("Node: " + (node + 1));
+        System.out.println("Nearest Node: 1" + "; Edge: " + adjacencyMatrix[node][0]);
+        tourCost += adjacencyMatrix[node][0];
+        System.out.println("\nTotal cost = " + tourCost);
     }
 
     private int getNearestNode(int node) {
@@ -77,13 +92,12 @@ public class NearestNeighborSolver {
             
             if ((adjacencyMatrix[node][i] <= edge)) { 
                 edge = adjacencyMatrix[node][i];
+                System.out.println("Nearest Node: " + (i + 1)  + "; Edge: " + edge);
                 nearestNode = i; //save off nearest neighbour.
             }
         }//end of for...loop
         
         tourCost += adjacencyMatrix[node][nearestNode];
-        visitedCities.add(nearestNode);
-        solution.add(nearestNode + 1);
         return nearestNode;
     }//end of getNearestNode()  
     
