@@ -58,7 +58,7 @@ public class NearestNeighborSolver {
      */
     private void processInitialNode(int node) {
         solution.add(node + 1); // Add the starting node to the solution array.
-        visitedCities.add(node); // Add the starting node to the isMarkedVisited cities
+        visitedCities.add(node); // Add the starting node to the visited cities
     }
     
     private void processFinalNode(int node) {
@@ -88,8 +88,20 @@ public class NearestNeighborSolver {
             if ((tour.getXCoord(node+1) == tour.getXCoord(i+1)) &&
             	(tour.getYCoord(node+1) == tour.getYCoord(i+1))) {
             	//Different City Node -- Same coordinates (Skip)
-            	//System.out.println("node(test): " + node+ " " + tour.getXCoord(node) + " i(test): " + i + " "+ tour.getXCoord(i));
-            	//System.out.println("node(test): " + node+ " " + tour.getYCoord(node) + " i(test): " + i + " "+ tour.getYCoord(i));
+                
+                // Current city (Debug purposes)
+//                double x1 = tour.getXCoord(node + 1);
+//                double y1 = tour.getYCoord(node + 1);
+                
+                // Destination city (Debug purposes)
+//                double x2 = tour.getXCoord(i + 1);
+//                double y2 = tour.getYCoord(i + 1);
+                              
+//                System.out.println("Debug Node (Current)    : " + (node + 1)
+//                        + "; x1 : " + x1 + "; y1 : " + y1);
+//                System.out.println("Debug Node (Destination): " + (i + 1)
+//                        + "; x2 : " + x1 + "; y2 : " + y2);
+                
             	continue;
             }
             
