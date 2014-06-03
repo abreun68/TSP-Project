@@ -43,7 +43,7 @@ public class TSP {
             // Accepts the .tsp filename from the command prompt 
             // filename = args[0];
             
-            for (int i = 0; i <= args.length; i++){
+            for (int i = 0; i < args.length; i++){
                 if ((args[i].equalsIgnoreCase("--BruteForce"))){
                     strategy = BRUTEFORCE;
                 }
