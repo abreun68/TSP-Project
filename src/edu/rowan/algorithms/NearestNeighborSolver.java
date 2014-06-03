@@ -13,9 +13,6 @@ public class NearestNeighborSolver {
     private final Tour tour;
     double[][] adjacencyMatrix;
     
-    private final int X_COORD = 1;
-    private final int Y_COORD = 2;
-
     ArrayList<Integer> visitedCities = new ArrayList<Integer>();
     ArrayList<Integer> solution = new ArrayList<Integer>();
     double tourCost;
@@ -84,27 +81,7 @@ public class NearestNeighborSolver {
                 // Same city. Current and destination cities are the same.
                 continue;
             }
-            
-            if ((tour.getXCoord(node+1) == tour.getXCoord(i+1)) &&
-            	(tour.getYCoord(node+1) == tour.getYCoord(i+1))) {
-            	//Different City Node -- Same coordinates (Skip)
-                
-                // Current city (Debug purposes)
-//                double x1 = tour.getXCoord(node + 1);
-//                double y1 = tour.getYCoord(node + 1);
-                
-                // Destination city (Debug purposes)
-//                double x2 = tour.getXCoord(i + 1);
-//                double y2 = tour.getYCoord(i + 1);
-                              
-//                System.out.println("Debug Node (Current)    : " + (node + 1)
-//                        + "; x1 : " + x1 + "; y1 : " + y1);
-//                System.out.println("Debug Node (Destination): " + (i + 1)
-//                        + "; x2 : " + x1 + "; y2 : " + y2);
-                
-            	continue;
-            }
-            
+                        
             if ((-1.0 == edge) && (-1 != adjacencyMatrix[node][i])) {
                edge = adjacencyMatrix[node][i];
                 // initiliaze this variable with the edge value of the
