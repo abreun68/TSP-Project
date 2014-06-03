@@ -12,6 +12,9 @@ public class NearestNeighborSolver {
 
     private final Tour tour;
     double[][] adjacencyMatrix;
+    
+    private final int X_COORD = 1;
+    private final int Y_COORD = 2;
 
     ArrayList<Integer> visitedCities = new ArrayList<Integer>();
     ArrayList<Integer> solution = new ArrayList<Integer>();
@@ -66,7 +69,7 @@ public class NearestNeighborSolver {
     }
 
     private int getNearestNode(int node) {
-        double edge = 0.0;
+        double edge = -1.0;
         int nearestNode = -1;
 
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
@@ -81,9 +84,17 @@ public class NearestNeighborSolver {
                 // Same city. Current and destination cities are the same.
                 continue;
             }
-
-            if ((0.0 == edge) && (-1 != adjacencyMatrix[node][i])) {
-                edge = adjacencyMatrix[node][i];
+            
+            if ((tour.getXCoord(node+1) == tour.getXCoord(i+1)) &&
+            	(tour.getYCoord(node+1) == tour.getYCoord(i+1))) {
+            	//Different City Node -- Same coordinates (Skip)
+            	//System.out.println("node(test): " + node+ " " + tour.getXCoord(node) + " i(test): " + i + " "+ tour.getXCoord(i));
+            	//System.out.println("node(test): " + node+ " " + tour.getYCoord(node) + " i(test): " + i + " "+ tour.getYCoord(i));
+            	continue;
+            }
+            
+            if ((-1.0 == edge) && (-1 != adjacencyMatrix[node][i])) {
+               edge = adjacencyMatrix[node][i];
                 // initiliaze this variable with the edge value of the
                 // first city, that is not the current city. This solves the 
                 // node[0][0] issues, where it is originally set to -1.
