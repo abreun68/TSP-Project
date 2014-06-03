@@ -52,8 +52,9 @@ public class Tour {
 
         if (line.contains("COMMENT")) {
             String[] split = line.split(":");
-            if (split.length > 1)
-            this.comment = split[1].trim();
+            if (split.length > 1) {
+                this.comment = split[1].trim();
+            }
         }
 
         if (line.contains("TYPE")) {
