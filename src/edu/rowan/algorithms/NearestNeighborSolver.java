@@ -10,12 +10,16 @@ import java.util.ArrayList;
  */
 public class NearestNeighborSolver {
 
-    private final Tour tour;
+    final Tour tour;
     double[][] adjacencyMatrix;
     
     ArrayList<Integer> visitedCities = new ArrayList<Integer>();
     ArrayList<Integer> solution = new ArrayList<Integer>();
     double tourCost;
+    
+    ArrayList<Integer> bestTourSoFar = new ArrayList<Integer>();
+    double costOfBestTourSoFar = 1000000000.00;
+
     
     public NearestNeighborSolver(Tour tour) {
     
@@ -32,6 +36,24 @@ public class NearestNeighborSolver {
     ArrayList<Integer> getShortestTour() {
 
         int node = 0; //Start Node
+    
+        
+        for(int i = 0; i < tour.getDimension(); i++){
+            determineShortestTour(i);
+            System.out.println("Tour cost = " + tourCost);
+            System.out.println("=========================\n");
+        }
+        
+        
+        System.out.println("\nBest cost = " + costOfBestTourSoFar);
+        return bestTourSoFar;
+    }//end of getShortestTour()   
+    
+    
+    private void determineShortestTour(int node){
+        solution.clear();
+        visitedCities.clear();
+        tourCost = 0.0;
         
         processInitialNode(node);
 
@@ -43,11 +65,9 @@ public class NearestNeighborSolver {
             System.out.println("\n");
         }
         
-        processFinalNode(node);
+        processFinalNode(node);        
         
-        return solution;
-    }//end of getShortestTour()   
-    
+    }
     
     /**
      * This function process the very first node that will be process.
@@ -59,11 +79,20 @@ public class NearestNeighborSolver {
     }
     
     private void processFinalNode(int node) {
+
+        tourCost += adjacencyMatrix[node][0];
+        
         System.out.println("Node: " + (node + 1));
         System.out.println("Nearest Node: 1" + "; Edge: " + adjacencyMatrix[node][0]);
-        tourCost += adjacencyMatrix[node][0];
-        System.out.println("\nTotal cost = " + tourCost);
-    }
+        //System.out.println(solution);
+        
+        if( tourCost < costOfBestTourSoFar ){
+            costOfBestTourSoFar = tourCost;
+            bestTourSoFar = solution;
+        }
+        
+        
+    }//end of processFinalNode()
 
     private int getNearestNode(int node) {
         double edge = -1.0;
