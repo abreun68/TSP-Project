@@ -46,6 +46,7 @@ public class NearestNeighborSolver {
         
         
         System.out.println("\nBest cost = " + costOfBestTourSoFar);
+        System.out.println(bestTourSoFar);
         return bestTourSoFar;
     }//end of getShortestTour()   
     
@@ -83,12 +84,12 @@ public class NearestNeighborSolver {
         tourCost += adjacencyMatrix[node][0];
         
         System.out.println("Node: " + (node + 1));
-        System.out.println("Nearest Node: 1" + "; Edge: " + adjacencyMatrix[node][0]);
+        System.out.println("Nearest Node: [initial node]" + "; Edge: " + adjacencyMatrix[node][0]);
         //System.out.println(solution);
         
         if( tourCost < costOfBestTourSoFar ){
             costOfBestTourSoFar = tourCost;
-            bestTourSoFar = solution;
+            bestTourSoFar = (ArrayList<Integer>) solution.clone();
         }
         
         
