@@ -5,7 +5,8 @@ package edu.rowan.algorithms;
 import java.util.ArrayList;
 
 /**
- *
+ * This class takes a Tour object and tries by using a nearest 
+ * neighbor  to compute the shortest tour distance.
  * @author Nacer Abreu and Emmanuel Bonilla
  */
 public class NearestNeighborSolver {
@@ -41,7 +42,7 @@ public class NearestNeighborSolver {
         }
         
         printSolution(bestTourSoFar);
-        System.out.println("\nBest cost = " + costOfBestTourSoFar);
+        System.out.println("\nTour cost = " + costOfBestTourSoFar);
 
         return bestTourSoFar;
     }//end of getShortestTour()   
@@ -61,7 +62,8 @@ public class NearestNeighborSolver {
            
             node = getNearestNode(node);
             visitedCities.add(node);
-            solution.add(node + 1);            
+            solution.add(node + 1);  // The first node should be 
+                                    // '1' instead of zero          
         }
         processFinalNode(node);        
         
