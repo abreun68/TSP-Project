@@ -34,42 +34,38 @@ public class NearestNeighborSolver {
      * @return  An array representing the shortest tour. The solution.
      */
     ArrayList<Integer> getShortestTour() {
-
-        int node = 0; //Start Node
-    
-        
+         
         for(int i = 0; i < tour.getDimension(); i++){
             initialNode = i;
             determineShortestTour(i);
-//            System.out.println("Tour cost = " + tourCost);
-//            System.out.println("=========================\n");
         }
         
-        
+        printSolution(bestTourSoFar);
         System.out.println("\nBest cost = " + costOfBestTourSoFar);
-//        System.out.println(bestTourSoFar);
+
         return bestTourSoFar;
     }//end of getShortestTour()   
     
-    
+    /**
+     * This function follows the nearest neighbor strategy to create a tour
+     * starting with the specified (argument) node.
+     * @param node Starting node
+     */
     private void determineShortestTour(int node){
         solution.clear();
         visitedCities.clear();
         tourCost = 0.0;
         
         processInitialNode(node);
-
         while (visitedCities.size() < tour.getDimension()) {
-            // System.out.println("Node: " + (node + 1));
+           
             node = getNearestNode(node);
             visitedCities.add(node);
-            solution.add(node + 1);
-            //System.out.println("\n");
+            solution.add(node + 1);            
         }
-        
         processFinalNode(node);        
         
-    }
+    }//end of determineShortestTour()
     
     /**
      * This function process the very first node that will be process.
@@ -84,11 +80,7 @@ public class NearestNeighborSolver {
 
         // Add distance back to the initial city.
         tourCost += adjacencyMatrix[node][initialNode]; 
-        
-        //System.out.println("Node: " + (node + 1));
-        //System.out.println("Nearest Node: [initial node]" + "; Edge: " + adjacencyMatrix[node][0]);
-        //System.out.println(solution);
-        
+               
         if( tourCost < costOfBestTourSoFar ){
             costOfBestTourSoFar = tourCost;
             bestTourSoFar = (ArrayList<Integer>) solution.clone();
@@ -124,7 +116,6 @@ public class NearestNeighborSolver {
             
             if ((adjacencyMatrix[node][i] <= edge)) { 
                 edge = adjacencyMatrix[node][i];
-                //System.out.println("Nearest Node: " + (i + 1)  + "; Edge: " + edge);
                 nearestNode = i; //save off nearest neighbour.
             }
         }//end of for...loop
@@ -152,4 +143,38 @@ public class NearestNeighborSolver {
         return found;
     }//end of isMarkedVisited();
     
+    /**
+     * This function is basically used for debugging purposes. It prints out all
+     * tour with the different cost for each leg of a trip (edges).
+     * @param solution The array solution
+     */
+    private void printSolution(ArrayList<Integer> solution) {
+        double cost = 0.0;
+        double edge = 0.0;
+        int currentNode = -1;
+        int nextNode = -1;
+            
+        for (int i = 1; i < solution.size(); i++) {
+            currentNode = solution.get(i - 1);
+            nextNode = solution.get(i);           
+            
+            edge = adjacencyMatrix[currentNode -1][nextNode - 1];
+            cost += edge;
+            
+            System.out.println("Node: " + currentNode);            
+            System.out.println("Nearest Node: " + nextNode  + "; Edge: " + edge);
+            System.out.println();
+        }//end of for loop.
+        
+        // The following ties the end node back to the initial
+        currentNode = nextNode;
+        nextNode = solution.get(0);
+        edge = adjacencyMatrix[currentNode - 1][nextNode - 1];
+        cost += edge;      
+        
+        System.out.println("Node: " + currentNode);
+        System.out.println("Nearest Node: " + nextNode + "; Edge: " + edge);
+
+        
+    }
 }//end of class
