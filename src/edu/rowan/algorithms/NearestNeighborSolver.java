@@ -38,6 +38,7 @@ public class NearestNeighborSolver {
      */
     ArrayList<Integer> getShortestTour() {
          
+        // Test every city as the starting location/node.
         for(int i = 0; i < tour.getDimension(); i++){
             initialNode = i;
             determineShortestTour(i);
@@ -51,7 +52,7 @@ public class NearestNeighborSolver {
     
     /**
      * This function follows the nearest neighbor strategy to create a tour
-     * starting with the specified (argument) node.
+     * starting with the specified (argument) location/node.
      * @param node Starting node
      */
     private void determineShortestTour(int node){
@@ -70,7 +71,8 @@ public class NearestNeighborSolver {
                                     // '1' instead of zero          
         }
         
-        // Add distance from the last node to the initial node to the tour cost.
+        // Add the distance from the last node to the initial node to the tour 
+        // cost.
         tourCost += adjacencyMatrix[node][initialNode]; 
   
         // Update best tour so far.
@@ -85,16 +87,16 @@ public class NearestNeighborSolver {
     /**
      * This function returns the nearest neighbor from the specified node 
      * argument.
-     * @param node The starting node. 
+     * @param node The starting location/node. 
      * @return The location/node number of the nearest neighbor
      */
     private int getNearestNode(int node) {
         double edge = -1.0;
         int nearestNode = -1;
 
-        // Search for the nearest neighbor starts from the higest location/node
-        // so that we pick the lowest location/node as the tie breaker when
-        // two location/nodes are at the same exact distance.
+        // Search for the nearest neighbor starting from the higest 
+        // location/node, so that we pick the lowest location/node as the tie 
+        // breaker when two location/nodes are at the same exact distance.
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
             
             if (isMarkedVisited(i)){
@@ -114,8 +116,7 @@ public class NearestNeighborSolver {
                 // first city, that is not the current city. This solves the 
                 // node[0][0] issues, where it is originally set to -1.
             }            
-            
-            
+                        
             if ((adjacencyMatrix[node][i] <= edge)) { 
                 edge = adjacencyMatrix[node][i];
                 nearestNode = i; //save off nearest neighbour.
