@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class NearestNeighborSolver {
 
     final Tour tour;
-    double[][] adjacencyMatrix;
+    final double[][] adjacencyMatrix;
     
     ArrayList<Integer> visitedCities;
     ArrayList<Integer> solution;
