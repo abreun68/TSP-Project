@@ -52,25 +52,32 @@ public class NearestNeighborSolver {
     /**
      * This function follows the nearest neighbor strategy to create a tour
      * starting with the specified (argument) location/node.
-     * @param node Starting node
+     * @param node Starting node. 
      */
     private void determineShortestTour(int node){
 
         int initialNode = node;
+        
+        /**
+         * This array list will hold the running solution for a particular 
+         * recursion. The nodes are save in a way that are compatible with 
+         * the TSPLIB format, in other words, all location/nodes start from 
+         * number '1'. Because our for...loops iterate starting at '0' (zero)
+         * we need to add '1' to the appending a value. 
+         */
         ArrayList<Integer> tmpSolution = new ArrayList<Integer>();
         
         visitedCities.clear();
         tmpTourCost = 0.0;
         
-        tmpSolution.add(node + 1); // Add the starting node to the tmpSolution array.
-        visitedCities.add(node); // Add the starting node to the visited cities
+        tmpSolution.add(node + 1); // Add the starting city to the solution.
+        visitedCities.add(node); // Add the starting node to the visited cities.
         
         while (visitedCities.size() < tour.getDimension()) {
            
             node = getNearestNode(node);
             visitedCities.add(node);
-            tmpSolution.add(node + 1);  // The first node should be 
-                                        // '1' instead of zero          
+            tmpSolution.add(node + 1);  // Add the current city to the solution.
         }
         
         // Add the distance from the last node to the initial node to the tour 
@@ -87,12 +94,12 @@ public class NearestNeighborSolver {
     
   
     /**
-     * This function returns the nearest neighbor from the specified node 
+     * This function returns the nearest neighbor from the specified currentNode 
      * argument.
-     * @param node The starting location/node. 
+     * @param currentNode The starting location/node. 
      * @return The location/node number of the nearest neighbor
      */
-    private int getNearestNode(int node) {
+    private int getNearestNode(int currentNode) {
         double edge = -1.0;
         int nearestNode = -1;
 
@@ -102,30 +109,30 @@ public class NearestNeighborSolver {
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
             
             if (isMarkedVisited(i)){
-                // This city has already been visited by some node.
+                // This city has already been visited by some currentNode.
                 continue;
             }
             
-            if (-1 == adjacencyMatrix[node][i]){
+            if (-1 == adjacencyMatrix[currentNode][i]){
                 // Same city. Current and destination cities are the same.
                 // Same cities are encoded with a -1 in the adjancency matrix.
                 continue;
             }
                         
-            if ((-1.0 == edge) && (-1 != adjacencyMatrix[node][i])) {
-               edge = adjacencyMatrix[node][i];
+            if ((-1.0 == edge) && (-1 != adjacencyMatrix[currentNode][i])) {
+               edge = adjacencyMatrix[currentNode][i];
                 // initiliaze this variable with the edge value of the
                 // first city, that is not the current city. This solves the 
-                // node[0][0] issues, where it is originally set to -1.
+                // currentNode[0][0] issues, where it is originally set to -1.
             }            
                         
-            if ((adjacencyMatrix[node][i] <= edge)) { 
-                edge = adjacencyMatrix[node][i];
+            if ((adjacencyMatrix[currentNode][i] <= edge)) { 
+                edge = adjacencyMatrix[currentNode][i];
                 nearestNode = i; //save off nearest neighbour.
             }
         }//end of for...loop
         
-        tmpTourCost += adjacencyMatrix[node][nearestNode];
+        tmpTourCost += adjacencyMatrix[currentNode][nearestNode];
         return nearestNode;
     }//end of getNearestNode()  
     
