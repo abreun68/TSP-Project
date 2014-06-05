@@ -13,20 +13,18 @@ public class NearestNeighborSolver {
     final double[][] adjacencyMatrix;
     
     ArrayList<Integer> visitedCities;
-    ArrayList<Integer> solution;
     ArrayList<Integer> bestTourSoFar;
     
-    double tourCost;
+    double tmpTourCost;
     double costOfBestTourSoFar;
-    int initialNode;
+
     
     public NearestNeighborSolver(Tour tour) {
     
         this.tour = tour;
         this.adjacencyMatrix = tour.getAdjacencyMatrix();
-        tourCost = 0.0;
+        tmpTourCost = 0.0;
         visitedCities = new ArrayList<Integer>();
-        solution = new ArrayList<Integer>();
         bestTourSoFar = new ArrayList<Integer>();
         costOfBestTourSoFar = 1000000000.00; //TODO: find a better way to init.
     }
@@ -40,8 +38,9 @@ public class NearestNeighborSolver {
          
         // Test every city as the starting location/node.
         for(int i = 0; i < tour.getDimension(); i++){
-            initialNode = i;
+            
             determineShortestTour(i);
+            
         }
         
         printSolution(bestTourSoFar);
@@ -56,9 +55,12 @@ public class NearestNeighborSolver {
      * @param node Starting node
      */
     private void determineShortestTour(int node){
-        solution.clear();
+
+        int initialNode = node;
+        ArrayList<Integer> solution = new ArrayList<Integer>();
+        
         visitedCities.clear();
-        tourCost = 0.0;
+        tmpTourCost = 0.0;
         
         solution.add(node + 1); // Add the starting node to the solution array.
         visitedCities.add(node); // Add the starting node to the visited cities
@@ -73,11 +75,11 @@ public class NearestNeighborSolver {
         
         // Add the distance from the last node to the initial node to the tour 
         // cost.
-        tourCost += adjacencyMatrix[node][initialNode]; 
+        tmpTourCost += adjacencyMatrix[node][initialNode]; 
   
         // Update best tour so far.
-        if (tourCost < costOfBestTourSoFar) {
-            costOfBestTourSoFar = tourCost;
+        if (tmpTourCost < costOfBestTourSoFar) {
+            costOfBestTourSoFar = tmpTourCost;
             bestTourSoFar = (ArrayList<Integer>) solution.clone();
         }        
         
@@ -123,7 +125,7 @@ public class NearestNeighborSolver {
             }
         }//end of for...loop
         
-        tourCost += adjacencyMatrix[node][nearestNode];
+        tmpTourCost += adjacencyMatrix[node][nearestNode];
         return nearestNode;
     }//end of getNearestNode()  
     
