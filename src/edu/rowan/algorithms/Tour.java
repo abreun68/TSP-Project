@@ -202,17 +202,25 @@ public class Tour {
     }
 
     /**
-     * This function returns the name of the .tsp file
-     * @return String The name of the .tsp file.
+     * This function returns the NAME of the .tsp file
+     * @return String The NAME entry of the .tsp file.
      */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * This function returns the COMMENT entry of the .tsp file.
+     * @return String The COMMENT entry of the .tsp file.
+     */
     public String getComment() {
         return this.comment;
     }
 
+    /**
+     * This function returns the TYPE entry of the .tsp file.
+     * @return String The TYPE entry of the .tsp file.
+     */
     public String getType() {
         return this.type;
     }

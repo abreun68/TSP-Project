@@ -3,8 +3,8 @@ package edu.rowan.algorithms;
 import java.util.ArrayList;
 
 /**
- * This class takes a Tour object and tries by using a nearest 
- * neighbor  to compute the shortest tour distance.
+ * This class takes a Tour object and tries, by using a nearest 
+ * neighbor algorithm, to compute the shortest tour distance.
  * @author Nacer Abreu and Emmanuel Bonilla
  */
 public class NearestNeighborSolver {
@@ -26,20 +26,26 @@ public class NearestNeighborSolver {
         tmpTourCost = 0.0;
         visitedCities = new ArrayList<Integer>();
         bestTourSoFar = new ArrayList<Integer>();
-        costOfBestTourSoFar = 1000000000.00; //TODO: find a better way to init.
+        
+        //TODO: find a better way to initialize this variable.
+        costOfBestTourSoFar = 1000000000.00; 
     }
 
     /**
-     * This function recursively visits every node specified in the .tsp file
+     * This function recursively visits every node specified in the .tsp file,
      * by always choosing the nearest node.
-     * @return  An array representing the shortest tour. The tmpSolution.
+     * @return  An array representing the shortest tour. 
      */
     ArrayList<Integer> getShortestTour() {
          
-        // Test every city as the starting location/node.
-        for(int i = 0; i < tour.getDimension(); i++){
+        /**
+         * Test every i as the starting location/node. 
+         * The shortest tour will be save off in the variable 'bestTourSoFar' 
+         * and its cost in the variable 'costOfBestTourSoFar'
+         */
+        for(int city = 0; city < tour.getDimension(); city++){
             
-            determineShortestTour(i);
+            determineShortestTour(city);
             
         }
         
@@ -61,27 +67,29 @@ public class NearestNeighborSolver {
         /**
          * The tmpSolution arraylist holds the running solution for a particular 
          * recursion. The values in the array, are saved in a way such that, are 
-         * compatible with the TSPLIB format. In other words, all location/nodes 
-         * start from number '1'. Because our for...loops iterate from '0' 
-         * (zero), we add '1' to the appending value. 
+         * compatible with the TSPLIB format. In other words, in .tsp file all 
+         * location/nodes start from number '1'. Because our for...loops 
+         * iterate from '0' (zero), we add '1' to the appending value. 
          */
         ArrayList<Integer> tmpSolution = new ArrayList<Integer>();
         
         visitedCities.clear();
         tmpTourCost = 0.0;
         
-        tmpSolution.add(node + 1); // Add the starting city to the solution.
+        tmpSolution.add(node + 1); // Add the starting i to the solution.
         visitedCities.add(node); // Add the starting node to the visited cities.
         
         while (visitedCities.size() < tour.getDimension()) {
            
             node = getNearestNode(node);
-            visitedCities.add(node);
-            tmpSolution.add(node + 1);  // Add the current city to the solution.
+            visitedCities.add(node); // Mark this i as visited
+            tmpSolution.add(node + 1);  // Add the current i to the solution.
         }
         
-        // Add the distance from the last node to the initial node to the tour 
-        // cost.
+        /**
+         * Add the distance from the last node visited to the initial node, to 
+         * the tour cost, in order to complete the cycle.
+         */
         tmpTourCost += adjacencyMatrix[node][initialNode]; 
   
         // Update best-tour-so-far and its cost.
@@ -105,17 +113,19 @@ public class NearestNeighborSolver {
         /**
          * Search for the nearest neighbor starting from the highest 
          * location/node, in order to always select the lowest node, in the 
-         * cases where two location/nodes have the same exact distance.
+         * cases where two location/nodes have the same exact distance. This is
+         * our tie breaker strategy.
          */
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
             
             if (isMarkedVisited(i)){
-                // This city has already been visited by some currentNode.
+                // This city has already been visited by some other 
+                // node/recursion.
                 continue;
             }
             
             if (-1 == adjacencyMatrix[currentNode][i]){
-                // Same city. Current and destination cities are the same.
+                // Same City. Current and destination cities are the same.
                 // Same cities are encoded with a -1 in the adjancency matrix.
                 continue;
             }
@@ -123,7 +133,7 @@ public class NearestNeighborSolver {
             if ((-1.0 == edge) && (-1 != adjacencyMatrix[currentNode][i])) {
                edge = adjacencyMatrix[currentNode][i];
                 // initiliaze this variable with the edge value of the
-                // first city, that is not the current city. This solves the 
+                // first i, that is not the current i. This solves the 
                 // currentNode[0][0] issues, where it is originally set to -1.
             }            
                         
@@ -133,6 +143,8 @@ public class NearestNeighborSolver {
             }
         }//end of for...loop
         
+        // At this point, the tmpTourCost is missing the cost from the last
+        // node visited to the beginning node.
         tmpTourCost += adjacencyMatrix[currentNode][nearestNode];
         return nearestNode;
     }//end of getNearestNode()  
