@@ -1,5 +1,3 @@
-
-
 package edu.rowan.algorithms;
 
 import java.util.ArrayList;
@@ -14,12 +12,12 @@ public class NearestNeighborSolver {
     final Tour tour;
     double[][] adjacencyMatrix;
     
-    ArrayList<Integer> visitedCities = new ArrayList<Integer>();
-    ArrayList<Integer> solution = new ArrayList<Integer>();
-    double tourCost;
+    ArrayList<Integer> visitedCities;
+    ArrayList<Integer> solution;
+    ArrayList<Integer> bestTourSoFar;
     
-    ArrayList<Integer> bestTourSoFar = new ArrayList<Integer>();
-    double costOfBestTourSoFar = 1000000000.00;
+    double tourCost;
+    double costOfBestTourSoFar;
     int initialNode;
     
     public NearestNeighborSolver(Tour tour) {
@@ -27,6 +25,10 @@ public class NearestNeighborSolver {
         this.tour = tour;
         this.adjacencyMatrix = tour.getAdjacencyMatrix();
         tourCost = 0.0;
+        visitedCities = new ArrayList<Integer>();
+        solution = new ArrayList<Integer>();
+        bestTourSoFar = new ArrayList<Integer>();
+        costOfBestTourSoFar = 1000000000.00; //TODO: find a better way to init.
     }
 
     /**
@@ -57,7 +59,9 @@ public class NearestNeighborSolver {
         visitedCities.clear();
         tourCost = 0.0;
         
-        processInitialNode(node);
+        solution.add(node + 1); // Add the starting node to the solution array.
+        visitedCities.add(node); // Add the starting node to the visited cities
+        
         while (visitedCities.size() < tour.getDimension()) {
            
             node = getNearestNode(node);
@@ -65,38 +69,33 @@ public class NearestNeighborSolver {
             solution.add(node + 1);  // The first node should be 
                                     // '1' instead of zero          
         }
-        processFinalNode(node);        
+        
+        // Add distance from the last node to the initial node to the tour cost.
+        tourCost += adjacencyMatrix[node][initialNode]; 
+  
+        // Update best tour so far.
+        if (tourCost < costOfBestTourSoFar) {
+            costOfBestTourSoFar = tourCost;
+            bestTourSoFar = (ArrayList<Integer>) solution.clone();
+        }        
         
     }//end of determineShortestTour()
     
+  
     /**
-     * This function process the very first node that will be process.
-     * @param node Initial node
+     * This function returns the nearest neighbor from the specified node 
+     * argument.
+     * @param node The starting node. 
+     * @return The location/node number of the nearest neighbor
      */
-    private void processInitialNode(int node) {
-        solution.add(node + 1); // Add the starting node to the solution array.
-        visitedCities.add(node); // Add the starting node to the visited cities
-    }
-    
-    private void processFinalNode(int node) {
-
-        // Add distance back to the initial city.
-        tourCost += adjacencyMatrix[node][initialNode]; 
-               
-        if( tourCost < costOfBestTourSoFar ){
-            costOfBestTourSoFar = tourCost;
-            bestTourSoFar = (ArrayList<Integer>) solution.clone();
-        }
-        
-        
-    }//end of processFinalNode()
-
     private int getNearestNode(int node) {
         double edge = -1.0;
         int nearestNode = -1;
 
+        // Search for the nearest neighbor starts from the higest location/node
+        // so that we pick the lowest location/node as the tie breaker when
+        // two location/nodes are at the same exact distance.
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
-
             
             if (isMarkedVisited(i)){
                 // This city has already been visited by some node.
@@ -105,6 +104,7 @@ public class NearestNeighborSolver {
             
             if (-1 == adjacencyMatrix[node][i]){
                 // Same city. Current and destination cities are the same.
+                // Same cities are encoded with a -1 in the adjancency matrix.
                 continue;
             }
                         
@@ -176,7 +176,6 @@ public class NearestNeighborSolver {
         
         System.out.println("Node: " + currentNode);
         System.out.println("Nearest Node: " + nextNode + "; Edge: " + edge);
-
         
-    }
+    }//end of printSolution()
 }//end of class
