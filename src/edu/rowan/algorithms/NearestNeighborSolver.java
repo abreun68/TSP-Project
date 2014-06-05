@@ -30,7 +30,7 @@ public class NearestNeighborSolver {
     }
 
     /**
-     * This function recursively visit every node specified in the .tsp file
+     * This function recursively visits every node specified in the .tsp file
      * by always choosing the nearest node.
      * @return  An array representing the shortest tour. The tmpSolution.
      */
@@ -59,11 +59,11 @@ public class NearestNeighborSolver {
         int initialNode = node;
         
         /**
-         * This array list will hold the running solution for a particular 
-         * recursion. The nodes are save in a way that are compatible with 
-         * the TSPLIB format, in other words, all location/nodes start from 
-         * number '1'. Because our for...loops iterate starting at '0' (zero)
-         * we need to add '1' to the appending a value. 
+         * The tmpSolution arraylist holds the running solution for a particular 
+         * recursion. The values in the array, are saved in a way such that, are 
+         * compatible with the TSPLIB format. In other words, all location/nodes 
+         * start from number '1'. Because our for...loops iterate from '0' 
+         * (zero), we add '1' to the appending value. 
          */
         ArrayList<Integer> tmpSolution = new ArrayList<Integer>();
         
@@ -94,8 +94,7 @@ public class NearestNeighborSolver {
     
   
     /**
-     * This function returns the nearest neighbor from the specified currentNode 
-     * argument.
+     * This function returns the nearest neighbor from the specified argument.
      * @param currentNode The starting location/node. 
      * @return The location/node number of the nearest neighbor
      */
@@ -103,9 +102,11 @@ public class NearestNeighborSolver {
         double edge = -1.0;
         int nearestNode = -1;
 
-        // Search for the nearest neighbor starting from the higest 
-        // location/node, so that we pick the lowest location/node as the tie 
-        // breaker when two location/nodes are at the same exact distance.
+        /**
+         * Search for the nearest neighbor starting from the highest 
+         * location/node, in order to always select the lowest node, in the 
+         * cases where two location/nodes have the same exact distance.
+         */
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
             
             if (isMarkedVisited(i)){
@@ -156,8 +157,8 @@ public class NearestNeighborSolver {
     }//end of isMarkedVisited();
     
     /**
-     * This function is basically used for debugging purposes. It prints out all
-     * tour with the different cost for each leg of a trip (edges).
+     * FOR DEBUGGING PURPOSES. It prints out all the cost for each leg of a 
+     * trip (edges).
      * @param tmpSolution The array tmpSolution
      */
     private void printSolution(ArrayList<Integer> solution) {
