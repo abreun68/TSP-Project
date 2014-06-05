@@ -32,7 +32,7 @@ public class NearestNeighborSolver {
     /**
      * This function recursively visit every node specified in the .tsp file
      * by always choosing the nearest node.
-     * @return  An array representing the shortest tour. The solution.
+     * @return  An array representing the shortest tour. The tmpSolution.
      */
     ArrayList<Integer> getShortestTour() {
          
@@ -57,30 +57,30 @@ public class NearestNeighborSolver {
     private void determineShortestTour(int node){
 
         int initialNode = node;
-        ArrayList<Integer> solution = new ArrayList<Integer>();
+        ArrayList<Integer> tmpSolution = new ArrayList<Integer>();
         
         visitedCities.clear();
         tmpTourCost = 0.0;
         
-        solution.add(node + 1); // Add the starting node to the solution array.
+        tmpSolution.add(node + 1); // Add the starting node to the tmpSolution array.
         visitedCities.add(node); // Add the starting node to the visited cities
         
         while (visitedCities.size() < tour.getDimension()) {
            
             node = getNearestNode(node);
             visitedCities.add(node);
-            solution.add(node + 1);  // The first node should be 
-                                    // '1' instead of zero          
+            tmpSolution.add(node + 1);  // The first node should be 
+                                        // '1' instead of zero          
         }
         
         // Add the distance from the last node to the initial node to the tour 
         // cost.
         tmpTourCost += adjacencyMatrix[node][initialNode]; 
   
-        // Update best tour so far.
+        // Update best-tour-so-far and its cost.
         if (tmpTourCost < costOfBestTourSoFar) {
             costOfBestTourSoFar = tmpTourCost;
-            bestTourSoFar = (ArrayList<Integer>) solution.clone();
+            bestTourSoFar = (ArrayList<Integer>) tmpSolution.clone();
         }        
         
     }//end of determineShortestTour()
@@ -151,7 +151,7 @@ public class NearestNeighborSolver {
     /**
      * This function is basically used for debugging purposes. It prints out all
      * tour with the different cost for each leg of a trip (edges).
-     * @param solution The array solution
+     * @param tmpSolution The array tmpSolution
      */
     private void printSolution(ArrayList<Integer> solution) {
         double cost = 0.0;
