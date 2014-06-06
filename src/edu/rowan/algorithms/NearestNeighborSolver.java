@@ -39,7 +39,7 @@ public class NearestNeighborSolver {
     ArrayList<Integer> getShortestTour() {
          
         /**
-         * Test every i as the starting location/node. 
+         * Test every city as the starting location/node. 
          * The shortest tour will be save off in the variable 'bestTourSoFar' 
          * and its cost in the variable 'costOfBestTourSoFar'
          */
