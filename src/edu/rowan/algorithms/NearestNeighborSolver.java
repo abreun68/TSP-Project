@@ -84,8 +84,8 @@ public class NearestNeighborSolver {
         while (visitedCities.size() < tour.getDimension()) {
            
             node = getNearestNode(node);
-            visitedCities.add(node); // Mark this i as visited
-            tmpSolution.add(node + 1);  // Add the current i to the solution.
+            visitedCities.add(node); // Mark this node as visited
+            tmpSolution.add(node + 1);  // Add the current node to the solution.
         }
         
         /**
@@ -135,7 +135,7 @@ public class NearestNeighborSolver {
             if ((-1.0 == edge) && (-1 != adjacencyMatrix[currentNode][i])) {
                edge = adjacencyMatrix[currentNode][i];
                 // initiliaze this variable with the edge value of the
-                // first i, that is not the current i. This solves the 
+                // first city, that is not the current city. This solves the 
                 // currentNode[0][0] issues, where it is originally set to -1.
             }            
                         
