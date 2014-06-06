@@ -45,6 +45,8 @@ public class NearestNeighborSolver {
          */
         for(int city = 0; city < tour.getDimension(); city++){
             
+            //Repetitive Nearest-Neighbor Algorithm (RNNA)
+
             determineShortestTour(city);
             
         }
