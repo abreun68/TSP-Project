@@ -32,9 +32,9 @@ public class NearestNeighborSolver {
     }
 
     /**
-     * This function recursively visits every node specified in the .tsp file,
-     * by always choosing the nearest node.
-     * @return  An array representing the shortest tour. 
+     * This function returns an array representing a solution for the TSP
+     * problem using a nearest neighbor algorithm.
+     * @return  An array representing the shortest tour found. 
      */
     ArrayList<Integer> getShortestTour() {
          
@@ -69,7 +69,7 @@ public class NearestNeighborSolver {
         /**
          * The tmpSolution arraylist holds the running solution for a particular 
          * recursion. The values in the array, are saved in a way such that, are 
-         * compatible with the TSPLIB format. In other words, in .tsp file all 
+         * compatible with the TSPLIB format. In other words, in the .tsp file all 
          * location/nodes start from number '1'. Because our for...loops 
          * iterate from '0' (zero), we add '1' to the appending value. 
          */
@@ -78,7 +78,7 @@ public class NearestNeighborSolver {
         visitedCities.clear();
         tmpTourCost = 0.0;
         
-        tmpSolution.add(node + 1); // Add the starting i to the solution.
+        tmpSolution.add(node + 1); // Add the starting node to the solution.
         visitedCities.add(node); // Add the starting node to the visited cities.
         
         while (visitedCities.size() < tour.getDimension()) {
@@ -114,9 +114,9 @@ public class NearestNeighborSolver {
 
         /**
          * Search for the nearest neighbor starting from the highest 
-         * location/node, in order to always select the lowest node, in the 
-         * cases where two location/nodes have the same exact distance. This is
-         * our tie breaker strategy.
+         * location/node (end-of-array), in order to always select the lowest 
+         * node, in the cases where two location/nodes have the same exact 
+         * distance. This is our tie breaker strategy.
          */
         for (int i = (tour.getDimension() - 1); i > -1; i--) {
             
