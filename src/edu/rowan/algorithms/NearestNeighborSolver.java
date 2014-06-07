@@ -36,7 +36,7 @@ public class NearestNeighborSolver {
      * problem using a nearest neighbor algorithm.
      * @return  An array representing the shortest tour found. 
      */
-    ArrayList<Integer> getShortestTour() {
+    public ArrayList<Integer> getShortestTour() {
          
         /**
          * Test every city as the starting location/node. 
