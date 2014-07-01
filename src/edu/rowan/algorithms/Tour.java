@@ -25,7 +25,9 @@ public class Tour {
     private static final int LOCATION = 0;
     private static final int X_COORD = 1;
     private static final int Y_COORD = 2;
+    private static final int numClosestPoints = 4;
     private double [ ] [ ] matrix;
+    private double [ ] [ ] lbmatrix;
 
     public Tour() {
         name = "";
@@ -69,6 +71,10 @@ public class Tour {
             // Create adjancency matrix. This matrix will be use to store 
             // the distances between cities.
             matrix = new double [ this.dimension ] [ this.dimension ] ;   
+
+            // Create lower bound matrix. This matrix will be used to store 
+            // the two shortest distances from a node.
+            lbmatrix = new double [ this.dimension ] [ numClosestPoints ] ;   
         }
 
         if (line.contains("EDGE_WEIGHT_TYPE")) {
@@ -79,6 +85,7 @@ public class Tour {
         if (line.contains("EOF")) {
             this.inNodesSection = false;
             populateMatrix();
+            populateLowerBoundMatrix();
         }
 
         if (this.inNodesSection) {
@@ -348,6 +355,51 @@ public class Tour {
         }
     }//end of populateMatrix()
     
+    /**
+     * This function calculates the two shortest distances for a certain node. 
+     * The distances are stored in the lower bound matrix for later use.
+     */
+    private void populateLowerBoundMatrix() {
+    	int closestNode = 0;
+    	int closestPoint = 1;
+    	int initClosestPt = 1000000000;
+
+    	// Initialize values for lower bound matrix
+    	for (int m = 0; m < this.dimension; m++) {
+    		lbmatrix[m][closestNode] = -1;
+    		lbmatrix[m][closestPoint] = initClosestPt;
+    		lbmatrix[m][closestNode+2] = -1;
+    		lbmatrix[m][closestPoint+2] = initClosestPt;
+    	}
+    	
+        for (int i = 0; i < this.dimension; i++) {
+            //System.out.println("City " + (i+1));
+            for (int j = 0; j < this.dimension; j++) {
+            	//System.out.println("Compare - matrix: "+matrix[i][j]+" cp: "+lbmatrix[i][closestPoint]);
+                if (i == j) {
+                    // Same city, no need to compare
+                	//System.out.println("No compare");
+                    continue;
+                } else if (matrix[i][j] < lbmatrix[i][closestPoint]){
+                	lbmatrix[i][closestNode+2] = lbmatrix[i][closestNode];
+                	//System.out.println("Putting " + lbmatrix[i][closestNode+2] + " into Slot 3");
+                    lbmatrix[i][closestPoint+2] = lbmatrix[i][closestPoint];
+                    //System.out.println("Putting " + lbmatrix[i][closestPoint+2] + " into Slot 4");
+                    lbmatrix[i][closestNode] = j;
+                    //System.out.println("Putting " + (j+1)  + " into Slot 1");
+                    lbmatrix[i][closestPoint] = matrix[i][j];
+                    //System.out.println("Putting " + lbmatrix[i][closestPoint] + " into Slot 2");
+                } else if (matrix [i][j] < lbmatrix [i][closestPoint+2]){
+                	lbmatrix[i][closestNode+2] = j;
+                    //System.out.println("EPutting " + (j+1)  + " into Slot 3");
+                    lbmatrix[i][closestPoint+2] = matrix[i][j];
+                    //System.out.println("EPutting " + matrix[i][j]  + " into Slot 4");
+                 } else
+                	continue;
+            }
+        }
+    }//end of populateMatrix()
+    
     
     /**
      * This function calculates the distance between two nodes/locations.
@@ -381,6 +433,15 @@ public class Tour {
     public double[][] getAdjacencyMatrix(){
         return matrix;
     }//end of getAdjacencyMatrix()
+ 
+    /**
+     * This functions returns the Lower Bound Matrix. This matrix consist of the
+     * the two shortest distances from each node.
+     * @return A two dimensional array containing the two shortest distances from a node.
+     */
+    public double[][] getLowerBoundMatrix(){
+        return lbmatrix;
+    }//end of getLowerBoundMatrix()
     
     
     /**

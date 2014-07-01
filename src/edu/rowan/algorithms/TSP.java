@@ -31,6 +31,7 @@ public class TSP {
         final int DEFAULT = 0;
         final int BRUTEFORCE = 1;
         final int NEAREST = 2;
+        final int BRANCHANDBOUND=3;
         int strategy = DEFAULT;
         
         ArrayList<Integer> shortestTour;
@@ -49,6 +50,9 @@ public class TSP {
                 }
                 else if((args[i].equalsIgnoreCase("--Nearest"))){
                     strategy = NEAREST;
+                }
+                else if((args[i].equalsIgnoreCase("--BranchAndBound"))){
+                    strategy = BRANCHANDBOUND;
                 }
                 else{
                     filename = args[0];
@@ -70,7 +74,8 @@ public class TSP {
                 filename = myPrefs.get("lastFile", "");
             }else{
                 myPrefs.put("lastFile",filename);
-            }               
+            }     
+            scanner.close();
         }
 
         Tour tour = new Tour();
@@ -83,6 +88,7 @@ public class TSP {
             while ((readLine = br.readLine()) != null) {
                 tour.parseLine(readLine);
             } // end while 
+            br.close();
         } // end try
         catch (IOException e) {
             System.err.println("Error: " + e);
@@ -90,7 +96,8 @@ public class TSP {
 
         
         switch (strategy) {
-            case BRUTEFORCE:
+        //case DEFAULT:    
+        case BRUTEFORCE:
                 // System.out.println(tour.toString());
                 BruteForceSolver bruteForce = new BruteForceSolver(tour);
                 bruteForce.generatePermutations();
@@ -101,14 +108,21 @@ public class TSP {
                 System.out.println("Solution :" + bruteForce.getShortestTour()
                       + ", Dist.: " + bruteForce.getShortestDistance() + "\n");
                 break;
-            
-            case DEFAULT:   
+              
             case NEAREST:
                 NearestNeighborSolver nn = new NearestNeighborSolver(tour);
                 shortestTour = nn.getShortestTour();
                 String answer2 = tour.printTour(shortestTour);
                 System.out.println(answer2);
                 break;
+            
+            case DEFAULT:
+            case BRANCHANDBOUND:
+            	BranchAndBoundSolver bab = new BranchAndBoundSolver(tour);
+            	//shortestTour = bab.getShortestTour();
+            	//String answer3 = tour.printTour(shortestTour);
+            	//System.out.println(answer3);
+            	break;
         }//end of switch statement
     }//end of main()
 }// end of class TSP
