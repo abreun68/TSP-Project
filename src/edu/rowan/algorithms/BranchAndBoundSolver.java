@@ -9,19 +9,18 @@ import java.util.ArrayList;
  */
 public class BranchAndBoundSolver {
 
-	//final Tour tour;
-    //final double[][] adjacencyMatrix;
 	Tour tour;
     double[][] adjacencyMatrix;
     double[][] lowerboundMatrix;
     double[][] currentTourDistMatrix = new double[6][3];
     
     ArrayList<Integer> visitedCities;
-    ArrayList<Integer> bestTourSoFar;
     ArrayList<Integer> cities;
+    ArrayList<Integer> bestTour;
 
     double tmpTourCost;
     double costOfBestTourSoFar;
+    double bestTourDist;
     double edge;
     
     int NodeA = 1;
@@ -40,60 +39,23 @@ public class BranchAndBoundSolver {
 
         tmpTourCost = 0.0;
         visitedCities = new ArrayList<Integer>();
-        bestTourSoFar = new ArrayList<Integer>();
+        bestTour = new ArrayList<Integer>();
         
         //TODO: find a better way to initialize this variable.
         costOfBestTourSoFar = 1000000000.00; 
-
+        bestTourDist = costOfBestTourSoFar;
+        
         generatePermutation();
         
-		//ComputeLowerBound(1);
-		for (int i = 0; i < tour.getDimension(); i++){
-			bestTourSoFar.add(i);
-			if (i != (tour.getDimension()-1)){
-			edge = adjacencyMatrix[i][i+1];
-			} else
-				edge = adjacencyMatrix[i][0];
-			tmpTourCost += edge;
-		}
-/*
-for (int i = 0; i< tour.getDimension();i++){
-		edge = adjacencyMatrix[i][i+1];
-		tmpTourCost += edge;
-} */
-		//System.out.println("\n" + bestTourSoFar);
-		//System.out.println(tmpTourCost);
-		//System.out.println(adjacencyMatrix[0][5]);
-		
 		test();
+		
+		System.out.println("Best Tour: "+bestTour+" Tour Cost: "+bestTourDist);
 	}
 
     /**
-     * This function returns an array representing a solution for the TSP
-     * problem using a nearest neighbor algorithm.
-     * @return  An array representing the shortest tour found. 
+     * This function generates all the permutations needed for the TSP
+     * problem with a starting city of 1. 
      */
-    public ArrayList<Integer> getShortestTour() {
-         
-        /**
-         * Test every city as the starting location/node. 
-         * The shortest tour will be save off in the variable 'bestTourSoFar' 
-         * and its cost in the variable 'costOfBestTourSoFar'
-         */
-    	for(int city = 0; city < tour.getDimension(); city++){
-            
-            //Repetitive Nearest-Neighbor Algorithm (RNNA)
-
-            //determineShortestTour(city);
-            
-        }
-        
-        printSolution(bestTourSoFar);
-        System.out.println("\nTour cost = " + costOfBestTourSoFar);
-
-        return bestTourSoFar;
-    }//end of getShortestTour()  
-   
     private void generatePermutation() {
         int lastItemIndex = tour.getDimension() - 1;
         int count = 1;
@@ -108,6 +70,9 @@ for (int i = 0; i< tour.getDimension();i++){
                     }
                     //System.out.println(count+" "+cities.toString());
                     //System.out.println(cities);
+                    //if (count == 1) {
+                    	test();
+                    //}
                     count++;
                     swap(lastSlot, head);
                     sort(head);
@@ -115,6 +80,7 @@ for (int i = 0; i< tour.getDimension();i++){
             	}
             }
         }
+        test();
         //System.out.println(count+" "+cities.toString());
         //System.out.println(cities.get(0));
     } //end generatePermutation
@@ -124,24 +90,36 @@ for (int i = 0; i< tour.getDimension();i++){
     	System.out.println(cities);
     	for (int i = 0; i < 6; i++){
     		compLowerBound = ComputeLowerBound(i);
-    		//System.out.println("\nStep "+(i+1));
-    		//System.out.println("   City: "+(cities.get(i))+" Lower Bound: "+compLowerBound);
-    		System.out.println("Current Tour Dist Matrix: ["+i+"] "+(int)currentTourDistMatrix[i][0]
-    				+ " "+currentTourDistMatrix[i][1]+" "+currentTourDistMatrix[i][2]);
+    		System.out.println("\nStep "+(i+1));
+    		System.out.println("   City: "+(cities.get(i))+" Lower Bound: "+compLowerBound);
+    		//System.out.println("Current Tour Dist Matrix: ["+i+"] "+(int)currentTourDistMatrix[i][0]
+    		//		+ " "+currentTourDistMatrix[i][1]+" "+currentTourDistMatrix[i][2]);
     	}
-    	System.out.println("\n");
-    	for (int i = 0; i < 6; i++){
+    	//System.out.println("\n");
+/*    	for (int i = 0; i < 6; i++){
     		System.out.println("Current Tour Dist Matrix: ["+i+"] "+(int)currentTourDistMatrix[i][0]
     				+ " "+currentTourDistMatrix[i][NodeA]+" "+currentTourDistMatrix[i][NodeB]);
-    	}
+    	} */
     	double costOfCurrentTour=0;
     	for (int i = 0; i < (tour.getDimension()-1); i++){
     		costOfCurrentTour += adjacencyMatrix[(cities.get(i)-1)][(cities.get(i+1)-1)];
     	}
     	// Add last node to close loop
-    	costOfCurrentTour += adjacencyMatrix[1][cities.get(tour.getDimension()-1)];
+    	//System.out.println(cities.get(tour.getDimension()-1));
+    	//System.out.println(adjacencyMatrix[0][5]);
+    	costOfCurrentTour += adjacencyMatrix[0][(cities.get(tour.getDimension()-1)-1)];
     	System.out.println("costOfCurrentTour: "+costOfCurrentTour);
+    	System.out.println("bestTourDist: "+bestTourDist);
+    	System.out.println(bestTour+"\n");
+    	
+    	if (costOfCurrentTour < bestTourDist){
+    		bestTourDist = costOfCurrentTour;
+    		//System.out.println("Changing bestTour");
+    		bestTour = (ArrayList<Integer>)cities.clone();
+    		//System.out.println(bestTour+"\n");
+    	}
     }
+    
     private double ComputeLowerBound (int node) {
     	
     	double lowerBound = 0;
@@ -153,26 +131,39 @@ for (int i = 0; i< tour.getDimension();i++){
     			currentTourDistMatrix[i][NodeA] = lowerboundMatrix[cities.get(i)-1][closestDistA];
     			currentTourDistMatrix[i][NodeB] = lowerboundMatrix[cities.get(i)-1][closestDistB];
     		}  // end for loop
-    		finalLowerBound = lowerBound/2;
+    		finalLowerBound = getLowerBound()/2;
     	} 
     	else {
-    		if (cities.get(node)==lowerboundMatrix[(cities.get(node)-1)][closestPointA] ||
-    			cities.get(node)==lowerboundMatrix[(cities.get(node)-1)][closestPointB]){
-    			System.out.println("Don't change Matrix");
+    		//System.out.println("\ncities.get(node): node = "+node+" city = "+cities.get(node));
+    		//System.out.println("PointA: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1));
+    		//System.out.println("PointB: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1));
+    		//System.out.println("cities.get(node-1): "+cities.get(node-1));
+    		if (cities.get(node-1)==(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1) ||
+    			cities.get(node-1)==(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1)){
+    			//System.out.println("Don't change Matrix");    			
     		} 
     		else {
     			if (node == 1){
+    				//System.out.println("Entering node == 1");
+    				//System.out.println("Changing NodeB to "+adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)]);
+    				//System.out.println("Changing NodeB to "+adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)]);
     				currentTourDistMatrix[node-1][NodeB] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
     				currentTourDistMatrix[node][NodeB] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
     			}
     			else {
+    				//System.out.println("Entering not == 1");
     				currentTourDistMatrix[node-1][NodeA] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
     				currentTourDistMatrix[node][NodeB] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
     			}
+
+    			lowerBound = getLowerBound();
+    			
+        		finalLowerBound = lowerBound/2;
     		}
-    		System.out.println("cities.get(node): "+cities.get(node));
-    		System.out.println("lbMatrixA: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1));
-    		System.out.println("lbMatrixB: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1));
+    		finalLowerBound = getLowerBound()/2;
+    		//System.out.println("cities.get(node): "+cities.get(node));
+    		//System.out.println("lbMatrixA: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1));
+    		//System.out.println("lbMatrixB: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1));
 
     		//Complete circuit
 			currentTourDistMatrix[0][NodeA] = adjacencyMatrix[(cities.get(node)-1)][0];
@@ -183,7 +174,7 @@ for (int i = 0; i< tour.getDimension();i++){
     			 
     			//lowerBound += adjacencyMatrix[i][i+1];
     		}
-    		finalLowerBound = lowerBound;
+    		//finalLowerBound = lowerBound;
     	}// end else of node=0
     	//System.out.println("Lower Bound = " + finalLowerBound);
       // Prints out the lower bound Matrix  	
@@ -215,6 +206,15 @@ for (int i = 0; i< tour.getDimension();i++){
             }
         }
     }//end of sort()
+    
+    private double getLowerBound() {
+    	double lowerBound = 0;
+		for (int i = 0; i < tour.getDimension(); i++){
+			lowerBound += currentTourDistMatrix[i][NodeA] + currentTourDistMatrix[i][NodeB];
+		}  // end for loop
+    	
+		return lowerBound;
+    }
 
     /**
      * FOR DEBUGGING PURPOSES. It prints out all the cost for each leg of a 

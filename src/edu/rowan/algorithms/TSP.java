@@ -118,7 +118,11 @@ public class TSP {
             
             case DEFAULT:
             case BRANCHANDBOUND:
+            	long startTime = System.currentTimeMillis();
             	BranchAndBoundSolver bab = new BranchAndBoundSolver(tour);
+            	long endTime   = System.currentTimeMillis();
+            	long totalTime = endTime - startTime;
+            	System.out.println("Total time to execute: "+totalTime+" ms");
             	//shortestTour = bab.getShortestTour();
             	//String answer3 = tour.printTour(shortestTour);
             	//System.out.println(answer3);
