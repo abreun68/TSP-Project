@@ -17,6 +17,7 @@ public class BranchAndBoundSolver {
     ArrayList<Integer> visitedCities;
     ArrayList<Integer> cities;
     ArrayList<Integer> bestTour;
+    ArrayList<Integer> tourSoFar;
 
     double tmpTourCost;
     double costOfBestTourSoFar;
@@ -45,10 +46,12 @@ public class BranchAndBoundSolver {
         costOfBestTourSoFar = 1000000000.00; 
         bestTourDist = costOfBestTourSoFar;
         
-        generatePermutation();
+        //generatePermutation();
         
-		test();
-		
+		//test();
+        bestTour.add(0);
+		tsp(bestTour, tour.getDimension());
+		//tsp(bestTour, 3);
 		System.out.println("Best Tour: "+bestTour+" Tour Cost: "+bestTourDist);
 	}
 
@@ -120,6 +123,40 @@ public class BranchAndBoundSolver {
     	}
     }
     
+    private int tsp (ArrayList<Integer> currentTour, int paths) {
+		System.out.println("Path "+paths);
+    	paths--;
+    	if (paths == 0) {
+    		System.out.println("Return tour "+currentTour);
+    		//Save off currentTour
+    		//currentTour.remove(1);
+    		System.out.println("End of tour");
+    		return 1;
+    	} 
+    	else {
+    		System.out.println("Current tour "+currentTour);
+    		System.out.println("Number of children "+paths);
+    		createChildren(currentTour,paths);
+/*    		for (int i = 0; i < paths; i++){
+    			//System.out.println("Path "+paths);
+    			currentTour.add(next);
+    			next++;
+    			System.out.println("i = "+i);
+    			System.out.println("Calling "+currentTour+", "+paths+", "+next);
+    			next = tsp(currentTour, paths, next);
+    			//if (count == 1)
+    			//	currentTour.remove(next-1);
+    		
+    	}*/
+    		return 1;
+    }
+    	//currentTour.add(1);
+    	
+    	//lowerbound = computeLowerBound();
+    	//if bottom of tree return
+    	//else
+    	//for each path
+    }
     private double ComputeLowerBound (int node) {
     	
     	double lowerBound = 0;
@@ -186,6 +223,30 @@ public class BranchAndBoundSolver {
 */
     	return finalLowerBound;
     } //end ComputeLowerBound
+    
+    private void createChildren(ArrayList<Integer> parentList, int numChildren) {
+    	System.out.println("Enter createChildren");
+    	int childrenMade = 0;
+    	//System.out.println("parent "+ parentList.get(0));
+    	for (int i = 0; childrenMade < numChildren; i++){
+    		//if (parentList.get(i) != NULL){
+    		//System.out.println("parent: "+parentList.get(i));
+    		if (parentList.contains(i)) {
+    			System.out.println("Do not add");
+    		}
+    		else {
+    			parentList.add(i);
+    	    	System.out.println("New parent list: "+parentList);
+    	    	tsp(parentList, numChildren);
+    	    	System.out.println("Remove i = "+i);
+    	    	int arraysize = parentList.size()-1;
+    	    	parentList.remove(arraysize);
+    	    	childrenMade++;
+    		}
+    		//}
+    	}
+    	System.out.println("Leaving createChildren");
+    }
    
     private void swap(int j, int k) {
         Integer tmp = cities.get(j);

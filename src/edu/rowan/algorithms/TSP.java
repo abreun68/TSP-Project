@@ -99,6 +99,7 @@ public class TSP {
         //case DEFAULT:    
         case BRUTEFORCE:
                 // System.out.println(tour.toString());
+        		long startTime = System.currentTimeMillis();
                 BruteForceSolver bruteForce = new BruteForceSolver(tour);
                 bruteForce.generatePermutations();
                 shortestTour = bruteForce.getShortestTour();
@@ -107,6 +108,9 @@ public class TSP {
                 System.out.println(answer);
                 System.out.println("Solution :" + bruteForce.getShortestTour()
                       + ", Dist.: " + bruteForce.getShortestDistance() + "\n");
+            	long endTime   = System.currentTimeMillis();
+            	long totalTime = endTime - startTime;
+            	System.out.println("Total time to execute: "+totalTime+" ms");
                 break;
               
             case NEAREST:
@@ -118,10 +122,10 @@ public class TSP {
             
             case DEFAULT:
             case BRANCHANDBOUND:
-            	long startTime = System.currentTimeMillis();
+            	startTime = System.currentTimeMillis();
             	BranchAndBoundSolver bab = new BranchAndBoundSolver(tour);
-            	long endTime   = System.currentTimeMillis();
-            	long totalTime = endTime - startTime;
+            	endTime   = System.currentTimeMillis();
+            	totalTime = endTime - startTime;
             	System.out.println("Total time to execute: "+totalTime+" ms");
             	//shortestTour = bab.getShortestTour();
             	//String answer3 = tour.printTour(shortestTour);
