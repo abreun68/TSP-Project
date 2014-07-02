@@ -55,39 +55,6 @@ public class BranchAndBoundSolver {
 		System.out.println("Best Tour: "+bestTour+" Tour Cost: "+bestTourDist);
 	}
 
-    /**
-     * This function generates all the permutations needed for the TSP
-     * problem with a starting city of 1. 
-     */
-    private void generatePermutation() {
-        int lastItemIndex = tour.getDimension() - 1;
-        int count = 1;
-        //System.out.println("lastItemIndex = "+lastItemIndex);
-        for (int trail = lastItemIndex; trail >= 0; trail--) {
-        	int head = (trail - 1);
-            if (head > 0) {
-            	if (cities.get(trail) > cities.get(head)) {
-            		int lastSlot = lastItemIndex;
-                    while (cities.get(head) > cities.get(lastSlot)) {
-                    	lastSlot--;
-                    }
-                    //System.out.println(count+" "+cities.toString());
-                    //System.out.println(cities);
-                    //if (count == 1) {
-                    	test();
-                    //}
-                    count++;
-                    swap(lastSlot, head);
-                    sort(head);
-                    trail = lastItemIndex + 1;
-            	}
-            }
-        }
-        test();
-        //System.out.println(count+" "+cities.toString());
-        //System.out.println(cities.get(0));
-    } //end generatePermutation
-
     private void test (){
     	double compLowerBound = 0;
     	System.out.println(cities);
@@ -124,12 +91,25 @@ public class BranchAndBoundSolver {
     }
     
     private int tsp (ArrayList<Integer> currentTour, int paths) {
-		System.out.println("Path "+paths);
+    	double costOfCurrentTour =0;
+		//System.out.println("Path "+paths);
     	paths--;
     	if (paths == 0) {
     		System.out.println("Return tour "+currentTour);
-    		//Save off currentTour
-    		//currentTour.remove(1);
+    		// Calculate cost of the current tour
+    		for (int i = 0; i < (tour.getDimension()-1); i++){
+        		System.out.println("City "+(currentTour.get(i))+" "+(currentTour.get(i+1)));
+        		costOfCurrentTour += adjacencyMatrix[currentTour.get(i)][currentTour.get(i+1)];
+        	}
+    		costOfCurrentTour += adjacencyMatrix[0][currentTour.get(tour.getDimension()-1)];
+        	
+        	System.out.println("bestTourDist: "+bestTourDist+" currentDist: "+costOfCurrentTour);
+        	// Update Best Tour and Distance
+        	if (bestTourDist > costOfCurrentTour) {
+        		bestTourDist = costOfCurrentTour;
+        		bestTour = (ArrayList<Integer>)currentTour.clone();
+        	}
+
     		System.out.println("End of tour");
     		return 1;
     	} 
@@ -137,26 +117,11 @@ public class BranchAndBoundSolver {
     		System.out.println("Current tour "+currentTour);
     		System.out.println("Number of children "+paths);
     		createChildren(currentTour,paths);
-/*    		for (int i = 0; i < paths; i++){
-    			//System.out.println("Path "+paths);
-    			currentTour.add(next);
-    			next++;
-    			System.out.println("i = "+i);
-    			System.out.println("Calling "+currentTour+", "+paths+", "+next);
-    			next = tsp(currentTour, paths, next);
-    			//if (count == 1)
-    			//	currentTour.remove(next-1);
-    		
-    	}*/
+
     		return 1;
-    }
-    	//currentTour.add(1);
-    	
-    	//lowerbound = computeLowerBound();
-    	//if bottom of tree return
-    	//else
-    	//for each path
-    }
+    	}
+    } //end tsp
+    
     private double ComputeLowerBound (int node) {
     	
     	double lowerBound = 0;
@@ -247,26 +212,6 @@ public class BranchAndBoundSolver {
     	}
     	System.out.println("Leaving createChildren");
     }
-   
-    private void swap(int j, int k) {
-        Integer tmp = cities.get(j);
-        cities.set(j, cities.get(k));
-        cities.set(k, tmp);
-    }//end of swap()
-    
-    private void sort(int m) {
-        //last item index
-        int index = (cities.size() - 1);
-        int n = m;
-        //System.out.println("head = "+ m + "; index = " + index);
-        for (int i = m + 1; i < index; i++) {
-            for (int j = n + 1; j < index; j++) {
-                if (cities.get(j) > cities.get(j + 1)) {
-                    swap(j, (j + 1));
-                }
-            }
-        }
-    }//end of sort()
     
     private double getLowerBound() {
     	double lowerBound = 0;
@@ -277,37 +222,4 @@ public class BranchAndBoundSolver {
 		return lowerBound;
     }
 
-    /**
-     * FOR DEBUGGING PURPOSES. It prints out all the cost for each leg of a 
-     * trip (edges).
-     * @param tmpSolution The array tmpSolution
-     */
-    private void printSolution(ArrayList<Integer> solution) {
-        double cost = 0.0;
-        double edge = 0.0;
-        int currentNode = -1;
-        int nextNode = -1;
-            
-        for (int i = 1; i < solution.size(); i++) {
-            currentNode = solution.get(i - 1);
-            nextNode = solution.get(i);           
-            
-            edge = adjacencyMatrix[currentNode -1][nextNode - 1];
-            cost += edge;
-            
-            System.out.println("Node: " + currentNode);            
-            System.out.println("Nearest Node: " + nextNode  + "; Edge: " + edge);
-            System.out.println();
-        }//end of for loop.
-        
-        // The following ties the end node back to the initial
-        currentNode = nextNode;
-        nextNode = solution.get(0);
-        edge = adjacencyMatrix[currentNode - 1][nextNode - 1];
-        cost += edge;      
-        
-        System.out.println("Node: " + currentNode);
-        System.out.println("Nearest Node: " + nextNode + "; Edge: " + edge);
-        
-    }//end of printSolution()
 }//end of class
