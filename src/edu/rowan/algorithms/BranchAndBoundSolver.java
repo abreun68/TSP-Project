@@ -12,10 +12,8 @@ public class BranchAndBoundSolver {
 	Tour tour;
     double[][] adjacencyMatrix;
     double[][] lowerboundMatrix;
-    double[][] currentTourDistMatrix = new double[6][3];
-    
-    ArrayList<Integer> visitedCities;
-    ArrayList<Integer> cities;
+    double[][] currentTourDistMatrix;    
+
     ArrayList<Integer> bestTour;
     ArrayList<Integer> tourSoFar;
 
@@ -26,6 +24,8 @@ public class BranchAndBoundSolver {
     
     int NodeA = 1;
     int NodeB = 2;
+    int ChangeA = 3;
+    int ChangeB = 4;
     int	closestPointA = 0;
     int closestDistA =1;
     int closestPointB = 2;
@@ -35,61 +35,32 @@ public class BranchAndBoundSolver {
         this.tour = tour;
         this.adjacencyMatrix = tour.getAdjacencyMatrix();
         this.lowerboundMatrix = tour.getLowerBoundMatrix();
-        this.cities = tour.getCities();
         
+        currentTourDistMatrix  = new double[tour.getDimension()][5];
 
         tmpTourCost = 0.0;
-        visitedCities = new ArrayList<Integer>();
         bestTour = new ArrayList<Integer>();
         
         //TODO: find a better way to initialize this variable.
         costOfBestTourSoFar = 1000000000.00; 
         bestTourDist = costOfBestTourSoFar;
         
-        //generatePermutation();
-        
-		//test();
         bestTour.add(0);
 		tsp(bestTour, tour.getDimension());
-		//tsp(bestTour, 3);
+
+		for (int i = 0; i < bestTour.size(); i++) {
+			bestTour.set(i, (bestTour.get(i)+1));
+		}
 		System.out.println("Best Tour: "+bestTour+" Tour Cost: "+bestTourDist);
 	}
 
-    private void test (){
-    	double compLowerBound = 0;
-    	System.out.println(cities);
-    	for (int i = 0; i < 6; i++){
-    		compLowerBound = ComputeLowerBound(i);
-    		System.out.println("\nStep "+(i+1));
-    		System.out.println("   City: "+(cities.get(i))+" Lower Bound: "+compLowerBound);
-    		//System.out.println("Current Tour Dist Matrix: ["+i+"] "+(int)currentTourDistMatrix[i][0]
-    		//		+ " "+currentTourDistMatrix[i][1]+" "+currentTourDistMatrix[i][2]);
-    	}
-    	//System.out.println("\n");
-/*    	for (int i = 0; i < 6; i++){
-    		System.out.println("Current Tour Dist Matrix: ["+i+"] "+(int)currentTourDistMatrix[i][0]
-    				+ " "+currentTourDistMatrix[i][NodeA]+" "+currentTourDistMatrix[i][NodeB]);
-    	} */
-    	double costOfCurrentTour=0;
-    	for (int i = 0; i < (tour.getDimension()-1); i++){
-    		costOfCurrentTour += adjacencyMatrix[(cities.get(i)-1)][(cities.get(i+1)-1)];
-    	}
-    	// Add last node to close loop
-    	//System.out.println(cities.get(tour.getDimension()-1));
-    	//System.out.println(adjacencyMatrix[0][5]);
-    	costOfCurrentTour += adjacencyMatrix[0][(cities.get(tour.getDimension()-1)-1)];
-    	System.out.println("costOfCurrentTour: "+costOfCurrentTour);
-    	System.out.println("bestTourDist: "+bestTourDist);
-    	System.out.println(bestTour+"\n");
-    	
-    	if (costOfCurrentTour < bestTourDist){
-    		bestTourDist = costOfCurrentTour;
-    		//System.out.println("Changing bestTour");
-    		bestTour = (ArrayList<Integer>)cities.clone();
-    		//System.out.println(bestTour+"\n");
-    	}
-    }
-    
+    /**
+     * This function takes a tour and starts calculating the
+     * best tour and best distance.  It also calls the
+     * branch-and-bound function to help prune out certain tours
+     * @param currentTour The current tour so far 
+     * @param paths The number of paths still left for this particular tour
+     */
     private int tsp (ArrayList<Integer> currentTour, int paths) {
     	double costOfCurrentTour =0;
 		//System.out.println("Path "+paths);
@@ -98,7 +69,7 @@ public class BranchAndBoundSolver {
     		System.out.println("Return tour "+currentTour);
     		// Calculate cost of the current tour
     		for (int i = 0; i < (tour.getDimension()-1); i++){
-        		System.out.println("City "+(currentTour.get(i))+" "+(currentTour.get(i+1)));
+        		//System.out.println("City "+(currentTour.get(i))+" "+(currentTour.get(i+1)));
         		costOfCurrentTour += adjacencyMatrix[currentTour.get(i)][currentTour.get(i+1)];
         	}
     		costOfCurrentTour += adjacencyMatrix[0][currentTour.get(tour.getDimension()-1)];
@@ -114,81 +85,106 @@ public class BranchAndBoundSolver {
     		return 1;
     	} 
     	else {
+    		double compLowerBound = 0;
     		System.out.println("Current tour "+currentTour);
     		System.out.println("Number of children "+paths);
+    		compLowerBound = ComputeLowerBound(currentTour);
+    		System.out.println("Lower Bound: "+compLowerBound);
+    		System.out.println("Best Dist: "+bestTourDist);
+    		if (compLowerBound > bestTourDist)
+    			return 1;
     		createChildren(currentTour,paths);
 
     		return 1;
     	}
     } //end tsp
     
-    private double ComputeLowerBound (int node) {
+    /**
+     * This function creates a matrix of the current lower bounds
+     * for a given tour
+     * @param tourList The current tour so far 
+     */
+    private double ComputeLowerBound (ArrayList<Integer> tourList) {
     	
-    	double lowerBound = 0;
     	double finalLowerBound = 0;
-    	if (node == 0){
-    		for (int i = 0; i < tour.getDimension(); i++){
-    			lowerBound += lowerboundMatrix[i][closestDistA] + lowerboundMatrix[i][closestDistB];
-    			currentTourDistMatrix[i][0] = cities.get(i);
-    			currentTourDistMatrix[i][NodeA] = lowerboundMatrix[cities.get(i)-1][closestDistA];
-    			currentTourDistMatrix[i][NodeB] = lowerboundMatrix[cities.get(i)-1][closestDistB];
-    		}  // end for loop
-    		finalLowerBound = getLowerBound()/2;
-    	} 
-    	else {
-    		//System.out.println("\ncities.get(node): node = "+node+" city = "+cities.get(node));
-    		//System.out.println("PointA: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1));
-    		//System.out.println("PointB: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1));
-    		//System.out.println("cities.get(node-1): "+cities.get(node-1));
-    		if (cities.get(node-1)==(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1) ||
-    			cities.get(node-1)==(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1)){
-    			//System.out.println("Don't change Matrix");    			
-    		} 
-    		else {
-    			if (node == 1){
-    				//System.out.println("Entering node == 1");
-    				//System.out.println("Changing NodeB to "+adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)]);
-    				//System.out.println("Changing NodeB to "+adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)]);
-    				currentTourDistMatrix[node-1][NodeB] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
-    				currentTourDistMatrix[node][NodeB] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
-    			}
-    			else {
-    				//System.out.println("Entering not == 1");
-    				currentTourDistMatrix[node-1][NodeA] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
-    				currentTourDistMatrix[node][NodeB] = adjacencyMatrix[(cities.get(node)-1)][(cities.get(node-1)-1)];
-    			}
+    	System.out.println("ComputeLowerBound on "+tourList);
 
-    			lowerBound = getLowerBound();
-    			
-        		finalLowerBound = lowerBound/2;
-    		}
-    		finalLowerBound = getLowerBound()/2;
-    		//System.out.println("cities.get(node): "+cities.get(node));
-    		//System.out.println("lbMatrixA: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointA]+1));
-    		//System.out.println("lbMatrixB: "+(lowerboundMatrix[(cities.get(node)-1)][closestPointB]+1));
+    	// Print out the initial Lower Bound Matrix
+/*    	for (int i =0; i < tour.getDimension(); i++){
+    		System.out.println("City " + (i+1) + ": " + 
+    				((int)lowerboundMatrix[i][0]+1) + "-" + lowerboundMatrix[i][1] + " " +
+    				((int)lowerboundMatrix[i][2]+1) + "-" + lowerboundMatrix[i][3]);
+    	}   
+*/    	 	
+    		//Create initial lower bound for all cities
+    	System.out.println("Setting up lowerboundMatrix");
+    	for (int i = 0; i < tour.getDimension(); i++){
+    		currentTourDistMatrix[i][0] = i;
+    		currentTourDistMatrix[i][NodeA] = lowerboundMatrix[i][closestDistA];
+    		currentTourDistMatrix[i][NodeB] = lowerboundMatrix[i][closestDistB];
+    		currentTourDistMatrix[i][ChangeA] = 0;
+    		currentTourDistMatrix[i][ChangeB] = 0;
+    		finalLowerBound = getLowerBound();
+    	}  // end for loop
+    	
+    	if (tourList.size() > 1) {
+    		for (int i = 0; i < (tourList.size()-1); i++) {
+    	    	int previousCity = tourList.get(tourList.size()-(i+2));
+    	    	int currentCity = tourList.get(tourList.size()-(i+1));
 
-    		//Complete circuit
-			currentTourDistMatrix[0][NodeA] = adjacencyMatrix[(cities.get(node)-1)][0];
-			currentTourDistMatrix[node][NodeA] = adjacencyMatrix[(cities.get(node)-1)][0];
+    	    	//System.out.println("Previous City: "+ previousCity);
+    	    	//System.out.println("Current City: "+ currentCity);
+    	    	//System.out.println("PointA: "+(lowerboundMatrix[tourList.get(tourList.size()-(i+1))][closestPointA]+1));
+    	    	//System.out.println("PointB: "+(lowerboundMatrix[tourList.get(tourList.size()-(i+1))][closestPointB]+1));
+    	    	double distanceBetweenCities = adjacencyMatrix[previousCity][currentCity];
 
-    		for (int i = node; i >= 0; i--){
-    			//System.out.println(node+"   * "+cities.get(i)+" & "+cities.get(i)+" *");
-    			 
-    			//lowerBound += adjacencyMatrix[i][i+1];
-    		}
-    		//finalLowerBound = lowerBound;
-    	}// end else of node=0
-    	//System.out.println("Lower Bound = " + finalLowerBound);
-      // Prints out the lower bound Matrix  	
-/*    	for (int i =0; i < 6; i++){
-            	System.out.println("City " + (i+1) + ": " + 
-            			((int)lowerboundMatrix[i][0]+1) + "-" + lowerboundMatrix[i][1] + " " +
-            			((int)lowerboundMatrix[i][2]+1) + "-" + lowerboundMatrix[i][3]);
-    	}    	
-*/
+    	    	if ((currentTourDistMatrix[previousCity][ChangeA] == 0) &&
+    	    		(currentTourDistMatrix[previousCity][NodeA] == distanceBetweenCities)) {
+    	    		currentTourDistMatrix[previousCity][ChangeA] = 1;
+    	    		currentTourDistMatrix[currentCity][ChangeA] = 1;    	    		
+    	    	} 
+    	    	else if ((currentTourDistMatrix[previousCity][ChangeB] == 0) &&
+    	    			 (currentTourDistMatrix[previousCity][NodeB] == distanceBetweenCities)) {
+    	    		currentTourDistMatrix[previousCity][ChangeB] = 1;
+    	    		currentTourDistMatrix[currentCity][ChangeB] = 1;
+    	    	}
+    	    	else if ((currentTourDistMatrix[previousCity][ChangeB] == 0) &&
+    	    			 (currentTourDistMatrix[previousCity][NodeB] < distanceBetweenCities)) {
+    	    		currentTourDistMatrix[previousCity][NodeB] = distanceBetweenCities;
+    	    		currentTourDistMatrix[previousCity][ChangeB] = 1;
+    	    		currentTourDistMatrix[currentCity][NodeB] = distanceBetweenCities;
+    	    		currentTourDistMatrix[currentCity][ChangeB] = 1;
+    	    	}
+    	    	else if ((currentTourDistMatrix[previousCity][ChangeA] == 0) &&
+   	    			 (currentTourDistMatrix[previousCity][NodeA] < distanceBetweenCities)) {
+   	    		currentTourDistMatrix[previousCity][NodeA] = distanceBetweenCities;
+   	    		currentTourDistMatrix[previousCity][ChangeA] = 1;
+   	    		currentTourDistMatrix[currentCity][NodeA] = distanceBetweenCities;
+   	    		currentTourDistMatrix[currentCity][ChangeA] = 1;
+    	    	}
+   	    		else {
+   	    			System.out.println("No Changes");
+   	    		}
+   	    	}
+
+    		//Print out the Current Lower Bound Tour Matrix 
+        	/*for (int i =0; i < tour.getDimension(); i++){
+        		System.out.println("City " + (i+1) + ": " + 
+        				(currentTourDistMatrix[i][NodeA]) +" "+
+        				(currentTourDistMatrix[i][NodeB]));
+        	} */   	
+
+   	     	finalLowerBound = getLowerBound();
+    	}
     	return finalLowerBound;
     } //end ComputeLowerBound
     
+    /**
+     * This function creates the children of the parent and 
+     * then calls tsp to continue to next city.
+     * @param parentList The current tour so far 
+     * @param numChildren The number of paths still left for this particular tour
+     */
     private void createChildren(ArrayList<Integer> parentList, int numChildren) {
     	System.out.println("Enter createChildren");
     	int childrenMade = 0;
@@ -211,15 +207,20 @@ public class BranchAndBoundSolver {
     		//}
     	}
     	System.out.println("Leaving createChildren");
-    }
+    } //end createChildren
     
+    /**
+     * This function calculates the lower bound for a given tour
+     * @return lowerBound/2 The calculated lower bound
+     */
     private double getLowerBound() {
     	double lowerBound = 0;
+    	//adjacencyMatrix[city][i];
 		for (int i = 0; i < tour.getDimension(); i++){
 			lowerBound += currentTourDistMatrix[i][NodeA] + currentTourDistMatrix[i][NodeB];
 		}  // end for loop
     	
-		return lowerBound;
+		return lowerBound/2;
     }
 
 }//end of class

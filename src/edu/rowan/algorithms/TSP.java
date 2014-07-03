@@ -127,9 +127,6 @@ public class TSP {
             	endTime   = System.currentTimeMillis();
             	totalTime = endTime - startTime;
             	System.out.println("Total time to execute: "+totalTime+" ms");
-            	//shortestTour = bab.getShortestTour();
-            	//String answer3 = tour.printTour(shortestTour);
-            	//System.out.println(answer3);
             	break;
         }//end of switch statement
     }//end of main()
